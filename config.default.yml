@@ -1,0 +1,18 @@
+token: '################'
+owner: '################'
+
+max-typing-duration: 20000
+sharp-concurency: 4
+
+download:
+	cache: yes
+	retry: 5
+	timeout: 10000
+	max-size: 10485760 # 10 MB
+
+
+
+# This is used to keep track of what version the config was created in
+# If any breaking changes are made, this might be used to automatically upgrade the bot or the config to avoid problems
+# You shouldn't edit this number manually
+__version__: 1
