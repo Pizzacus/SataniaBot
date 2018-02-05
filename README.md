@@ -1,6 +1,6 @@
 <div align="center">
   <h1>Satania</h1>
-  <h2>The Most Devilish Bot for Discord</h2>
+  <h3>The Most Devilish Bot for Discord</h3>
   <p>
     <a href="https://discord.gg/rC9ebp7"><img src="https://discordapp.com/api/guilds/310180409541394432/embed.png"></a>
     <a href="https://choosealicense.com/licenses/agpl-3.0/"><img src="https://img.shields.io/github/license/Pizzacus/SataniaBot.svg" alt="License"/></a>
