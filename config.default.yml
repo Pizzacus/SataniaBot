@@ -1,6 +1,8 @@
 token: '################'
 owner: '################'
 
+prefix: 's!'
+
 max-typing-duration: 20000
 sharp-concurency: 4
 
