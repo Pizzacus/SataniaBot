@@ -16,8 +16,7 @@ function exec(message) {
 							.map(channel => ` • ${channel}`)
 							.join('\n')
 				}
-			})
-				.then(() => Promise.reject());
+			}).then(() => Promise.reject());
 		}
 	}
 }

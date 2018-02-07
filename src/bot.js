@@ -46,7 +46,7 @@ client.once('ready', () => {
 		status: 'online',
 		afk: false,
 		game: {
-			name: 's!help | s!invite',
+			name: `${client.commandHandler.prefix()}help | ${client.commandHandler.prefix()}invite`,
 			type: 0
 		}
 	});
