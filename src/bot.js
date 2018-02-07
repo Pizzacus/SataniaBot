@@ -1,3 +1,5 @@
+const fs = require('fs');
+const path = require('path');
 const {AkairoClient} = require('discord-akairo');
 const sharp = require('sharp');
 global.requireUtil = require('./utils/require-util');
@@ -18,7 +20,7 @@ const client = new AkairoClient({
 	},
 	commandDirectory: './src/commands/',
 	listenerDirectory: './src/listeners/',
-	inhibitorDirectory: './src/inhibitors'
+	inhibitorDirectory: './src/inhibitors/'
 });
 
 if (!client.shard) {
@@ -26,6 +28,16 @@ if (!client.shard) {
 }
 
 client.initArgs = JSON.parse(process.argv[2]);
+
+const dir = path.resolve('data');
+
+if (!fs.existsSync(dir)) {
+	fs.mkdir(dir, err => {
+		if (err) {
+			console.error(err);
+		}
+	});
+}
 
 client.once('ready', () => {
 	console.log('Ready!');
