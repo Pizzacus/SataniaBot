@@ -2,7 +2,7 @@
 	"name": "satania-bot",
 	"version": "1.0.0",
 	"description": "The most devilish bot for Discord!",
-	"main": "bot.js",
+	"main": "main.js",
 	"author": "Pizzacus",
 	"license": "AGPL-3.0+",
 	"homepage": "https://satania.moe/",
