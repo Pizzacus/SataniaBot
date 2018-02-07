@@ -34,7 +34,7 @@ async function exec(message) {
 	if (message.guild) {
 		mentions.push(message.author.id);
 		await Promise.all(
-			mentions.map(user => 
+			mentions.map(user =>
 				message.guild.fetchMember(user)
 					.catch(() => null)
 			)
