@@ -18,7 +18,7 @@ async function exec(message, args) {
 	const sleep = require('util').promisify(setTimeout);
 
 	if (args.user) {
-		if (message.author.equals(args.user.user)) {
+		if (message.author.id === args.user.id) {
 			await message.channel.send(`**${message.guild.member(message.author).displayName}** successfully killed themselves with a bullet in their head 😂🔫`);
 			return;
 		}
