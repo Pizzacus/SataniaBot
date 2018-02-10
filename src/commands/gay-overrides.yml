@@ -1,0 +1,32 @@
+# This file allows you to override some ratings of the gay command
+# Just use the user ID as the key, and you can add three different properties
+#
+#   gay: Sets the gay rating of the user, the straight rating will be calculated from that
+#   activity: sets the activity of the user, note that the gay and straight ratings will be lowered proportionally to the activity
+#             for instance, if a user has a 40% gay rating and 25% of activity, it will be displayed as 10% gay
+#   rating: The rating displayed
+#
+# Note: All percentages are represented by numbers between 0 and 1
+
+'216968594662227968':
+  gay: 0.54
+  activity: 0.9
+
+'300721840417013780':
+  gay: 0.85
+  activity: 0.05
+
+'224641749459402762':
+  gay: 0.67
+  activity: 0.87
+
+'312877473706672128':
+  gay: 0.5625
+  activity: 0.8
+
+'254543598928920576':
+  gay: 0.01
+  activity: 0.95
+
+'295575141772165121':
+  rating: 'Seksexual'

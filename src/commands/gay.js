@@ -1,5 +1,13 @@
+const fs = require('fs');
 const {Command} = require('discord-akairo');
 const seedrandom = require('seedrandom');
+const yaml = require('js-yaml');
+
+let overrides = {};
+
+if (fs.existsSync('src/commands/gay-overrides.yml')) {
+	overrides = yaml.safeLoad(fs.readFileSync('src/commands/gay-overrides.yml'), 'utf8');
+}
 
 const options = {
 	aliases: ['gay', 'gya'],
@@ -7,14 +15,14 @@ const options = {
 		id: 'user',
 		type: 'relevant',
 		match: 'content',
-		default: message => {
-			return message.author;
-		}
+		default: message => message.author
 	}],
 	description: 'Check how gay someone is! If you don\'t mention anyone, the bot will give **your** results\n__**Examples:**__: `s!gay @Example#1234`, `s!gay`'
 };
 
 function exec(message, args) {
+	const user = args.user;
+
 	function numberModifier(x) {
 		return (Math.cos((x + 1) * Math.PI) * 0.5) + 0.5;
 	}
@@ -29,25 +37,28 @@ function exec(message, args) {
 		return barString.join('');
 	}
 
-	const userRNG = seedrandom(args.user.id);
+	function percent(value) {
+		return (value * 100).toFixed(1) + '%';
+	}
+
+	const userRNG = seedrandom(user.id);
 	let gay = numberModifier(userRNG());
 	let activity = activityModifier(userRNG());
 
-	if (args.user.id === '216968594662227968') {
-		gay = 0.54;
-		activity = 0.9;
-	} else if (args.user.id === '300721840417013780') {
-		gay = 0.85;
-		activity = 0.05;
-	} else if (args.user.id === '224641749459402762') {
-		gay = 0.67;
-		activity = 0.87;
-	} else if (args.user.id === '312877473706672128') {
-		gay = 0.5625;
-		activity = 0.8;
-	} else if (args.user.id === '254543598928920576') {
-		gay = 0.01;
-		activity = 0.95;
+	let override = {};
+
+	if (user.id in overrides) {
+		override = overrides[user.id];
+	}
+
+	console.dir(override);
+
+	if ('gay' in override) {
+		gay = override.gay;
+	}
+
+	if ('activity' in override) {
+		activity = override.activity;
 	}
 
 	let straight = 1 - gay;
@@ -56,7 +67,7 @@ function exec(message, args) {
 	gay *= activity;
 	straight *= activity;
 
-	const rankingArray = [
+	const ratingArray = [
 		'VERY Straight',
 		'Pretty Straight',
 		'A Little Straight',
@@ -68,30 +79,29 @@ function exec(message, args) {
 		'VERY Gay'
 	];
 
-	let rating = rankingArray[Math.floor(gay * rankingArray.length)];
+	let rating = ratingArray[Math.floor(gay * ratingArray.length)];
 
 	if (activity < 0.3) {
 		rating = 'Asexual';
 	}
 
-	if (args.user.id === '295575141772165121') {
-		rating = 'Seksexual';
+	if ('rating' in override) {
+		rating = override.rating;
 	}
 
-	return message.channel.send('', {
+	return message.channel.send({
 		embed: {
 			title: `Rating: __${rating}__`,
 			author: {
-				name: `Gay ratings for ${args.user.displayName || args.user.username}`,
-				icon_url: args.user.displayAvatarURL || args.user.user.displayAvatarURL // eslint-disable-line camelcase
+				name: `Gay ratings for ${user.displayName || user.username}`,
+				icon_url: user.displayAvatarURL || user.user.displayAvatarURL // eslint-disable-line camelcase
 			},
 			fields: [
 				{
 					name: '  Orientation:',
-					value: `\`${bar(orientation, 24)}\`      **Straight:** ${(straight * 100).toFixed(1)}%\n` +
-						`◂ Straight                      Gay ▸             **Gay:** ${(gay * 100).toFixed(1)}%\n` +
-						// TODO: This next line is terrible smhhhhh
-						`                                                      **Asexuality:** ${(100 - (straight * 100).toFixed(1) - (gay * 100).toFixed(1)).toFixed(1)}%`
+					value: `\`${bar(orientation, 24)}\`      **Straight:** ${percent(straight)}\n` +
+						`◂ Straight                      Gay ▸             **Gay:** ${percent(gay)}\n` +
+						`                                                      **Asexuality:** ${percent(1 - activity)}`
 				},
 				{
 					name: 'Sexual Activity:',
