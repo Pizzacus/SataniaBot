@@ -79,7 +79,7 @@ function exec(message, args) {
 		'VERY Gay'
 	];
 
-	let rating = ratingArray[Math.floor(gay * ratingArray.length)];
+	let rating = ratingArray[Math.floor(orientation * ratingArray.length)];
 
 	if (activity < 0.3) {
 		rating = 'Asexual';
