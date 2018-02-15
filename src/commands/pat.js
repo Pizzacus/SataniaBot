@@ -26,7 +26,10 @@ async function exec(message, args) {
 
 	await message.channel.startTyping();
 
-	if (link.source instanceof Discord.User && link.source.id === message.author.id) {
+	if (
+		(link.source instanceof Discord.Member || link.source instanceof Discord.User) &&
+		link.source.id === message.author.id
+	) {
 		await message.channel.send(`${message.author}, are you really that desperate to be patted?`, {
 			files: [{
 				attachment: './assets/sadness.gif'
