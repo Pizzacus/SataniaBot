@@ -25,13 +25,7 @@ async function exec(message, args) {
 
 	message.channel.startTyping(true);
 
-	const avatar = await (fetchImage(link.url).catch(async err => {
-		await message.reply('An error occured while trying to get your image, I\'m sorry, check that the URL is correct please ;-;', {
-			files: ['./assets/error.jpg']
-		});
-		await message.channel.stopTyping();
-		throw err;
-	}));
+	const avatar = await fetchImage(link.url);
 
 	if (!avatar) {
 		await message.reply('I wasn\'t able to find any image to use ;-;');
