@@ -5,7 +5,7 @@ const regexEmojis = require('emoji-regex');
 const regexCustomEmojis = () => /<a?:(\w+):(\d+)>/g;
 
 /**
- * Gets the URl to the static avatar of a user
+ * Gets the URL to the static avatar of a user
  * @param {Discord.User|Discord.GuildMember} user - User to get the avatar of
  */
 function staticAvatar(user) {
@@ -32,47 +32,66 @@ function staticAvatar(user) {
  */
 
 /**
+ * Trim characters out of an URL like Discord does to avoid sentence ponctuaction ending up being matched as a URL
+ * @param {string} url The string to trim, doesn't need to truely be a valid URL
+ * @returns {string} The trimmed string
+ * @example
+ * // Discord removes ponctuation at the end
+ * trimURL('http://example.com/...'); // 'http://example.com/'
+ * trimURL('http://example.org/.../thing'); // 'http://example.org/.../thing'
+ *
+ * // They also remove parenthesis except if they are part of the link
+ * trimURL('http://example.com)'); // 'http://example.com'
+ * trimURL('http://example.com/(link)'); // 'http://example.com/(link)'
+ *
+ * // The behavior can become kinda weird when mixing ponctuation and parenthesis
+ * // But it is still how Discord handles it
+ * trimURL('http://example.org/;;)...'); // 'http://example.org/;;'
+ */
+function trimURL(url) {
+	const exclude = ['.', ',', ':', ';', '"', '\'', ']', ')'];
+	let lastLetter;
+
+	while (exclude.includes(lastLetter = url[url.length - 1])) {
+		if (lastLetter === ')' && url.split('(').length >= url.split(')').length) {
+			break;
+		}
+
+		url = url.substr(0, url.length - 1);
+
+		if (lastLetter === ')') {
+			break;
+		}
+	}
+
+	return url;
+}
+
+/**
  * Matches URLs in a string in the exact same way than Discord does
  * @param {String} content - The content to parse for URLs
  * @returns {url[]} The URLs matched
  */
 function matchURLs(content) {
-	const baseRegex = /<?https?:\/\/[^\s>]+[^\s]/g;
-	const exclude = ['.', ',', ':', ';', '"', '\'', ']', ')'];
+	// The first group of the regex contains the URL only if it is delimited, the second contains it if it is not
+	const linkRegex = /(?:<([^ >]+:\/[^ >]+)>|(https?:\/\/[^\s<]{2,}))/g;
 	const links = [];
 
 	let match;
-	while ((match = baseRegex.exec(content)) !== null) {
-		let start = match.index;
+	while ((match = linkRegex.exec(content)) !== null) {
+		const start = match.index;
+		let url;
 		let end;
-		let url = match[0];
 		let delimited;
 
-		if (url.startsWith('<') && url.endsWith('>')) {
-			end = start + url.length;
-			url = url.substr(1, url.length - 2);
+		if (match[1]) {
 			delimited = true;
-		} else {
-			if (url.startsWith('<')) {
-				url = url.substr(1);
-				start += 1;
-			}
-
-			let lastLetter;
-			while (exclude.includes(lastLetter = url[url.length - 1])) {
-				if (lastLetter === ')' && url.split('(').length >= url.split(')').length) {
-					break;
-				}
-
-				url = url.substr(0, url.length - 1);
-
-				if (lastLetter === ')') {
-					break;
-				}
-			}
-
-			end = start + url.length;
+			url = match[1];
+			end = start + match[0].length;
+		} else if (match[2]) {
 			delimited = false;
+			url = trimURL(match[2]);
+			end = start + url.length;
 		}
 
 		links.push({
@@ -313,6 +332,7 @@ function relevantLink(...items) {
 
 relevantLink.regexCustomEmojis = regexCustomEmojis;
 relevantLink.staticAvatar = staticAvatar;
+relevantLink.trimURL = trimURL;
 relevantLink.matchURLs = matchURLs;
 relevantLink.codepoints = codepoints;
 relevantLink.getArgs = getArgs;
