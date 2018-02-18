@@ -41,6 +41,6 @@ accepts.push(
 	'*/*;q=0.1'
 );
 
-options.headers.Accepts = accepts.join(', ');
+options.headers.Accept = accepts.join(', ');
 
 module.exports = options;
