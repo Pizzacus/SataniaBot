@@ -60,7 +60,7 @@ async function exec(message, args) {
 		image: './assets/pat-overlay.png'
 	});
 
-	await message.channel.send(`**${link.displayName}** was patted successfully! \u2764`, {
+	await message.channel.send(`**${link.name}** was patted successfully! \u2764`, {
 		files: [{
 			name: `${link.name}.jpeg`,
 			attachment: await image

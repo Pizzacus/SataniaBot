@@ -46,7 +46,7 @@ async function exec(message, args) {
 		image: './assets/kiss-overlay.png'
 	});
 
-	await message.channel.send(`**${link.displayName}** was kissed successfully! \u2764`, {
+	await message.channel.send(`**${link.name}** was kissed successfully! \u2764`, {
 		files: [{
 			name: `${link.name}.jpeg`,
 			attachment: await image
