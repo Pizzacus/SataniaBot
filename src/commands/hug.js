@@ -50,7 +50,7 @@ async function exec(message, args) {
 		background: '#36393e'
 	});
 
-	await message.channel.send(`**${message.guild.member(message.author).displayName}** hugged **${link.displayName}** successfully! \u2764`, {
+	await message.channel.send(`**${message.guild.member(message.author).displayName}** hugged **${link.name}** successfully! \u2764`, {
 		files: [{
 			name: `${link.name}.jpeg`,
 			attachment: await image

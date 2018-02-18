@@ -46,7 +46,7 @@ async function exec(message, args) {
 		image: './assets/bite-overlay.png'
 	});
 
-	await message.channel.send(`**${link.displayName}** was bitten successfully >\\_<`, {
+	await message.channel.send(`**${link.name}** was bitten successfully >\\_<`, {
 		files: [{
 			name: `${link.name}.jpeg`,
 			attachment: await image
