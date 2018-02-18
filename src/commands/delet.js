@@ -24,7 +24,7 @@ async function exec(message, args) {
 		return;
 	}
 
-	message.channel.startTyping(true);
+	message.channel.startTyping();
 
 	const avatar = await fetchImage(link.url);
 
