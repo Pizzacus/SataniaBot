@@ -9,7 +9,7 @@ const options = {
 	timeout: config.download.timeout || 10000,
 	size: config.download.maxSize || 10 * 1024 * 1024,
 	headers: {
-		'User-Agent': `${pkg.name}/${pkg.version} (+${pkg.homepage})`
+		'User-Agent': `${pkg.name}/${pkg.version} (+${pkg.repository || pkg.homepage})`
 	}
 };
 

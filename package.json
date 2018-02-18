@@ -6,6 +6,8 @@
 	"author": "Pizzacus",
 	"license": "AGPL-3.0+",
 	"homepage": "https://satania.moe/",
+	"repository": "https://github.com/Pizzacus/SataniaBot.git",
+	"private": true,
 	"dependencies": {
 		"cheerio": "^1.0.0-rc.2",
 		"discord-akairo": "^7.5.0",
