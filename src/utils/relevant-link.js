@@ -1,132 +1,12 @@
 const {URL, domainToUnicode} = require('url');
 const Discord = require('discord.js');
-const regexEmojis = require('emoji-regex');
 
-const regexCustomEmojis = () => /<a?:(\w+):(\d+)>/g;
-
-/**
- * @typedef {Object} url
- * @property {string} url - The URL matched, without the < and > if it was delimited
- * @property {number} start - The position where the URL started in the string
- * @property {number} end - The position where the URL ended in the string.
- * NOTE: It is possible that `link.end - link.start !== link.url.length`, namely for delimited URLs
- * @property {boolean} delimited - If the URL was delimited using < and > in the string
- */
-
-/**
- * Trim characters out of an URL like Discord does to avoid sentence ponctuaction ending up being matched as a URL
- * @param {string} url The string to trim, doesn't need to truely be a valid URL
- * @returns {string} The trimmed string
- * @example
- * // Discord removes ponctuation at the end
- * trimURL('http://example.com/...'); // 'http://example.com/'
- * trimURL('http://example.org/.../thing'); // 'http://example.org/.../thing'
- *
- * // They also remove parenthesis except if they are part of the link
- * trimURL('http://example.com)'); // 'http://example.com'
- * trimURL('http://example.com/(link)'); // 'http://example.com/(link)'
- *
- * // The behavior can become kinda weird when mixing ponctuation and parenthesis
- * // But it is still how Discord handles it
- * trimURL('http://example.org/;;)...'); // 'http://example.org/;;'
- */
-function trimURL(url) {
-	const exclude = ['.', ',', ':', ';', '"', '\'', ']', ')'];
-	let lastLetter;
-
-	while (exclude.includes(lastLetter = url[url.length - 1])) {
-		if (lastLetter === ')' && url.split('(').length >= url.split(')').length) {
-			break;
-		}
-
-		url = url.substr(0, url.length - 1);
-
-		if (lastLetter === ')') {
-			break;
-		}
-	}
-
-	return url;
-}
-
-/**
- * A link returned by matchURLs
- */
-class Link {
-	constructor(options) {
-		/**
-		 * The URL of the link, may not be http(s)
-		 * @type {string}
-		 */
-		this.url = String(options.url);
-
-		/**
-		 * The index the URL started in the string
-		 * @type {number}
-		 */
-		this.start = Number(options.start);
-
-		/**
-		 * The index the URL ended in the string
-		 * Please note that in some cases, `link.end - link.start !== link.url.length`
-		 * @type {number}
-		 */
-		this.end = Number(options.end);
-
-		/**
-		 * If the URl was delimited with < and >
-		 * @type {boolean}
-		 */
-		this.delimited = Boolean(options.delimited);
-	}
-}
-
-/**
- * Matches URLs in a string in the exact same way than Discord does
- * @param {string} content - The content to parse for URLs
- * @returns {url[]} The URLs matched
- */
-function matchURLs(content) {
-	// The first group of the regex contains the URL only if it is delimited, the second contains it if it is not
-	const linkRegex = /(?:<([^ >]+:\/[^ >]+)>|(https?:\/\/[^\s<]{2,}))/g;
-	const links = [];
-
-	let match;
-	while ((match = linkRegex.exec(content)) !== null) {
-		const start = match.index;
-		let url;
-		let end;
-		let delimited;
-
-		if (match[1]) {
-			delimited = true;
-			url = match[1];
-			end = start + match[0].length;
-		} else if (match[2]) {
-			delimited = false;
-			url = trimURL(match[2]);
-			end = start + url.length;
-		}
-
-		links.push(new Link({
-			start,
-			end,
-			url,
-			delimited
-		}));
-	}
-
-	return links;
-}
-
-/**
- * Returns the codepoints representing a string, separated with hyphens
- * @param {String} character
- * @returns {String}
- */
-function codepoints(character) {
-	return [...character].map(char => char.codePointAt(0).toString(16)).join('-');
-}
+const {
+	matchURLs,
+	matchEmojis,
+	Link,
+	Emoji
+} = requireUtil('parse-message');
 
 /**
  * Returns the content of a message handled by Akairo without the prefix and command
@@ -195,40 +75,28 @@ const handler = {
 			name: humanizeURL(url)
 		};
 	},
+	link: link => ({
+		type: 'link',
+		url: link.url,
+		name: humanizeURL(link.url)
+	}),
+	emoji: emoji => ({
+		type: 'emoji',
+		url: emoji.url,
+		name: emoji.toString()
+	}),
 	message: message => {
 		const content = getArgs(message);
 
 		const resolved = resolveLink(
 			message.attachments,
 			matchURLs(content),
-			message.mentions
+			message.mentions,
+			matchEmojis(content)
 		);
 
 		if (resolved) {
 			return resolved;
-		}
-
-		if (regexCustomEmojis().test(content)) {
-			const [, emojiName, emojiID] = regexCustomEmojis().exec(content);
-			const emoji = message.client.emojis.get(emojiID);
-
-			return {
-				type: 'custom_emoji',
-				url: `https://cdn.discordapp.com/emojis/${emojiID}.png`,
-				source: emoji,
-				name: `:${emojiName}: ${emoji || ''}`.trim()
-			};
-		}
-
-		if (regexEmojis().test(content)) {
-			const emoji = regexEmojis().exec(content)[0];
-
-			return {
-				type: 'emoji',
-				url: `https://twemoji.maxcdn.com/2/svg/${codepoints(emoji)}.svg`,
-				source: emoji,
-				name: emoji
-			};
 		}
 
 		if (
@@ -292,6 +160,14 @@ function resolveLinkItem(item) {
 			link = handler.message(item);
 			break;
 
+		case Link:
+			link = handler.link(item);
+			break;
+
+		case Emoji:
+			link = handler.emoji(item);
+			break;
+
 		default:
 	}
 
@@ -345,10 +221,6 @@ function resolveLink(...items) {
 	return null;
 }
 
-resolveLink.regexCustomEmojis = regexCustomEmojis;
-resolveLink.trimURL = trimURL;
-resolveLink.matchURLs = matchURLs;
-resolveLink.codepoints = codepoints;
 resolveLink.getArgs = getArgs;
 resolveLink.humanizeURL = humanizeURL;
 
