@@ -35,7 +35,7 @@ async function exec(message, args) {
 	const image = await render({
 		image: './assets/hug.jpg'
 	}, {
-		image: fetchImage(relevantLink.staticAvatar(message.author)),
+		image: fetchImage(relevantLink(message.author).url),
 		height: 275,
 		width: 275,
 		x: 490,
