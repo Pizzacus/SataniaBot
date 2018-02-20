@@ -131,6 +131,10 @@ const handler = {
 function resolveLinkItem(item) {
 	let link = {};
 
+	if (item === null || item === undefined) {
+		return null;
+	}
+
 	switch (item.constructor) {
 		case Discord.Guild:
 			link = handler.guild(item);
