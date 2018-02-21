@@ -34,6 +34,7 @@ async function exec(message) {
 			description: res.joke + '\u2002' + link,
 			footer: {
 				text: 'Powered by icanhazdadjoke.com',
+				// eslint-disable-next-line camelcase
 				icon_url: 'https://icanhazdadjoke.com/static/favicon-32x32.png'
 			}
 		}
