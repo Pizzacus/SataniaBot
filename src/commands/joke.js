@@ -6,7 +6,7 @@ fetchDefaults.headers.Accept = 'application/json';
 const fetch = require('make-fetch-happen').defaults(fetchDefaults);
 
 const options = {
-	aliases: ['joke', 'jokes'],
+	aliases: ['joke', 'jokes', 'dadjoke'],
 	description: 'Get a random joke, pretty generic comand'
 };
 
