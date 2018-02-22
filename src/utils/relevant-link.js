@@ -88,43 +88,36 @@ const handler = {
 	message: message => {
 		const content = getArgs(message);
 
-		const resolved = resolveLink(
+		const resolve = [
 			message.attachments,
 			matchURLs(content),
 			message.mentions,
 			matchEmojis(content)
-		);
-
-		if (resolved) {
-			return resolved;
-		}
+		];
 
 		if (
-			message.guild &&
-			message.guild.icon && (
+			message.guild && (
 				content.search(Discord.MessageMentions.EVERYONE_PATTERN) >= 0 ||
 				content.toLowerCase().includes(message.guild.name.toLowerCase())
 			)
 		) {
-			return resolveLink(message.guild);
+			resolve.push(message.guild);
 		}
 
-		const resolvedEmbeds = resolveLink(message.embeds);
-
-		if (resolvedEmbeds) {
-			return resolvedEmbeds;
-		}
+		resolve.push(message.embeds);
 
 		// ^^^^ keyword
 		if (/^\^+$/.test(content)) {
 			const resolvedMessage = [...message.channel.messages.values()].reverse().find(message => {
-				return message.embeds.some(embed => embed.image || embed.thumbnail);
+				return message.embeds.some(embed => embed.image || embed.thumbnail) || message.attachments.size > 0;
 			});
 
 			if (resolvedMessage) {
-				return resolveLink(resolvedMessage.embeds);
+				resolve.push(resolvedMessage.attachments, resolvedMessage.embeds);
 			}
 		}
+
+		return resolveLink(resolve);
 	}
 };
 
