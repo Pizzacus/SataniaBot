@@ -1,0 +1,9 @@
+{
+	"extends": "xo",
+	"rules": {
+		"no-await-in-loop": ["off"]
+	},
+	"globals": {
+		"requireUtil": false
+	}
+}

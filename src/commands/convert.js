@@ -107,24 +107,38 @@ function exec(message, args) {
 
 		if (meters >= 1000) {
 			return message.reply(`That would be ${Math.round(meters / 1000 * 100) / 100} kilometers!`);
-		} else if (meters >= 1) {
+		}
+
+		if (meters >= 1) {
 			return message.reply(`That would be ${Math.round(meters * 100) / 100} meters!`);
-		} else if (meters >= 0.01) {
+		}
+
+		if (meters >= 0.01) {
 			return message.reply(`That would be ${Math.round(meters * 100 * 100) / 100} centimeters!`);
 		}
+
 		return message.reply(`That would be ${Math.round(meters * 1000 * 100000) / 100000} millimeters!`);
-	} else if (units.type === 'metric') {
+	}
+
+	if (units.type === 'metric') {
 		const inches = units.meters / 0.0254;
 
 		if (inches >= 63360) {
 			return message.reply(`That would be ${Math.round(inches / 63360 * 100) / 100} miles!`);
-		} else if (inches > 180) {
+		}
+
+		if (inches > 180) {
 			return message.reply(`That would be ${Math.round(inches / 12 * 100) / 100} feet!`);
-		} else if (inches >= 12) {
+		}
+
+		if (inches >= 12) {
 			return message.reply(`That would be ${Math.floor(inches / 12)}'${Math.floor(inches) % 12}"!`);
 		}
+
 		return message.reply(`That would be ${Math.round(inches * 100000) / 100000} inches!`);
-	} else if (units.type === 'error') {
+	}
+
+	if (units.type === 'error') {
 		return message.reply('There was an error processing your mesurements.\nMaybe you typed something like `5\'4` or `1m50` these notation aren\'t supported, use `5\'4"` and `1.5m` instead');
 	}
 }
