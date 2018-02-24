@@ -48,8 +48,6 @@ const cupSizes = [
 	'B',
 	'C',
 	'D',
-	'E',
-	'D',
 	'DD'
 ];
 
