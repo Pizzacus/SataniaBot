@@ -141,8 +141,8 @@ function exec(message, args) {
 	// \u2009 is a thin whitespace, it should be used between usits and numbers
 	infos += `        **Height**: ${Math.round(heightMetric)}\u2009cm / ${Math.floor(heightImperial / 12)}'${heightImperial % 12}"\n`;
 
-	// === WEIGHT ===
-	const weight = (numberModifier(userRNG()) * 20) + 45;
+	// === WEIGHT === this is zackwebs, there is magic numbers because I dicked around in desmos to find decent weight numbers using BMI
+    const weight = (((numberModifier(userRNG())*0.4)+1)*Math.pow(heightMetric,2))/575.0;
 	infos += `       **Weight**: ${Math.round(weight)}\u2009kg / ${Math.round(weight * 2.2046226218)}\u2009lb\n`;
 
 	// === BLOOD TYPE ===
