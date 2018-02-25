@@ -81,8 +81,8 @@ function exec(message, args) {
 	/**
 	 * Generates a progression bar
 	 * @param {number} value Progression between 0 and 1
-	 * @param {number} size Size fo the bar
-	 * @param {attay} [chars] tTe characters to use, the lower the index the lower the progression
+	 * @param {number} size Size of the bar
+	 * @param {attay} [chars] The characters to use, the lower the index the lower the progression
 	 */
 	function bar(value, size, chars = [' ', '▌', '█']) {
 		let barString = '';
@@ -138,7 +138,7 @@ function exec(message, args) {
 	const heightMetric = (numberModifier(userRNG()) * 60) + 120;
 	const heightImperial = Math.round(heightMetric / 2.54);
 
-	// \u2009 is a thin whitespace, it should be used between usits and numbers
+	// \u2009 is a thin whitespace, it should be used between units and numbers
 	infos += `        **Height**: ${Math.round(heightMetric)}\u2009cm / ${Math.floor(heightImperial / 12)}'${heightImperial % 12}"\n`;
 
 	// === WEIGHT ===
