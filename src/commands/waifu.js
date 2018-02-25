@@ -142,7 +142,13 @@ function exec(message, args) {
 	infos += `        **Height**: ${Math.round(heightMetric)}\u2009cm / ${Math.floor(heightImperial / 12)}'${heightImperial % 12}"\n`;
 
 	// === WEIGHT ===
-	const weight = (numberModifier(userRNG()) * 20) + 45;
+	// Weight is calculated by aiming to obtain a realistical BMI between 17 and 24
+	// The BMI is a ratio to determine if a certain weight is anormal compared to a certain height
+	// A normal BMI is between 18.5-25, we just made it a little lower because waifus are thinnnnn
+	const minWeight = 17 * ((heightMetric / 100) ** 2);
+	const maxWeight = 24 * ((heightMetric / 100) ** 2);
+	const weight = (numberModifier(userRNG()) * (maxWeight - minWeight)) + minWeight;
+
 	infos += `       **Weight**: ${Math.round(weight)}\u2009kg / ${Math.round(weight * 2.2046226218)}\u2009lb\n`;
 
 	// === BLOOD TYPE ===
