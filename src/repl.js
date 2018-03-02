@@ -17,7 +17,7 @@ module.exports = client => {
 
 	class REPLStream extends Transform {
 		_transform(chunk, encoding, callback) {
-			const str = '\r\x1b[K' + chunk;
+			const str = '\r\u001B[K' + chunk;
 			callback(null, str);
 			replserver.displayPrompt(true);
 		}

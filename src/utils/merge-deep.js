@@ -3,9 +3,10 @@ function mergeDeep(target, ...sources) {
 		return (item && typeof item === 'object' && !Array.isArray(item));
 	}
 
-	if (sources.length < 1) {
+	if (sources.length === 0) {
 		return target;
 	}
+
 	const source = sources.shift();
 
 	if (isObject(target) && isObject(source)) {
