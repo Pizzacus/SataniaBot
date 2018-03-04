@@ -34,5 +34,4 @@ process.on('exit', () => {
 	}
 });
 
-spawnShards()
-	.catch(console.error);
+spawnShards().catch(console.error);

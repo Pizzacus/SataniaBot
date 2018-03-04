@@ -39,9 +39,10 @@ async function processImage(options) {
 
 	// The density is set automatically if it's not already present
 	// In order to render SVG images at full resolution
-	sharpOptions.density = 'density' in sharpOptions ?
-		sharpOptions.density :
-		optimalDensity(awaited, options.width, options.height);
+	sharpOptions.density =
+		'density' in sharpOptions ?
+			sharpOptions.density :
+			optimalDensity(awaited, options.width, options.height);
 
 	const image = sharp(awaited, sharpOptions);
 
@@ -74,10 +75,12 @@ async function processImage(options) {
 	const output = await image
 		.raw()
 		.toBuffer({resolveWithObject: true})
-		.then(queueData({
-			x: options.x || 0,
-			y: options.y || 0
-		}));
+		.then(
+			queueData({
+				x: options.x || 0,
+				y: options.y || 0
+			})
+		);
 
 	return output;
 }
@@ -112,10 +115,12 @@ function composeImages(a, b) {
 		})
 		.raw()
 		.toBuffer({resolveWithObject: true})
-		.then(queueData({
-			x: Math.min(a.x, b.x),
-			y: Math.min(a.y, b.x)
-		}));
+		.then(
+			queueData({
+				x: Math.min(a.x, b.x),
+				y: Math.min(a.y, b.x)
+			})
+		);
 }
 
 /**
@@ -191,9 +196,7 @@ function render(...images) {
 				const b = queue[i + 1];
 
 				if (!(a instanceof Promise) && !(b instanceof Promise)) {
-					queue.splice(i, 2, handlePromise(
-						composeImages(a, b)
-					));
+					queue.splice(i, 2, handlePromise(composeImages(a, b)));
 				}
 			}
 		}

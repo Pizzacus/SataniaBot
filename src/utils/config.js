@@ -59,7 +59,11 @@ if (config.token === '################') {
 	process.exit(1);
 }
 
-if (Array.isArray(config.owner) && config.owner.length === 1 && config.owner[0] === '################') {
+if (
+	Array.isArray(config.owner) &&
+	config.owner.length === 1 &&
+	config.owner[0] === '################'
+) {
 	console.warn('WARNING: You should set the ID of the bot owner in config.yml');
 }
 

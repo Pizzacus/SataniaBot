@@ -1,12 +1,7 @@
 const {URL, domainToUnicode} = require('url');
 const Discord = require('discord.js');
 
-const {
-	matchURLs,
-	matchEmojis,
-	Link,
-	Emoji
-} = requireUtil('parse-message');
+const {matchURLs, matchEmojis, Link, Emoji} = requireUtil('parse-message');
 
 /**
  * Returns the content of a message handled by Akairo without the prefix and command
@@ -22,8 +17,10 @@ function getArgs(message) {
 		return message.content;
 	}
 
-	const startIndex = message.content.indexOf(message.util.prefix) + message.util.prefix.length;
-	const argsIndex = message.content.slice(startIndex).search(/\S/) + message.util.prefix.length;
+	const startIndex =
+		message.content.indexOf(message.util.prefix) + message.util.prefix.length;
+	const argsIndex =
+		message.content.slice(startIndex).search(/\S/) + message.util.prefix.length;
 
 	return message.content.slice(argsIndex + message.util.alias.length + 1);
 }
@@ -108,9 +105,14 @@ const handler = {
 
 		// ^^^^ keyword
 		if (/^\^+$/.test(content)) {
-			const resolvedMessage = [...message.channel.messages.values()].reverse().find(message => {
-				return message.embeds.some(embed => embed.image || embed.thumbnail) || message.attachments.size > 0;
-			});
+			const resolvedMessage = [...message.channel.messages.values()]
+				.reverse()
+				.find(message => {
+					return (
+						message.embeds.some(embed => embed.image || embed.thumbnail) ||
+						message.attachments.size > 0
+					);
+				});
 
 			if (resolvedMessage) {
 				resolve.push(resolvedMessage.attachments, resolvedMessage.embeds);

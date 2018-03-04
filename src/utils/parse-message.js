@@ -93,12 +93,14 @@ function matchURLs(content) {
 			end = start + url.length;
 		}
 
-		links.push(new Link({
-			start,
-			end,
-			url,
-			delimited
-		}));
+		links.push(
+			new Link({
+				start,
+				end,
+				url,
+				delimited
+			})
+		);
 	}
 
 	return links;

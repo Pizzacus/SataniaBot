@@ -1,5 +1,7 @@
 const {URL} = require('url');
-const fetch = require('make-fetch-happen').defaults(requireUtil('fetch-defaults'));
+const fetch = require('make-fetch-happen').defaults(
+	requireUtil('fetch-defaults')
+);
 const cheerio = require('cheerio');
 const fileType = require('file-type');
 
@@ -44,7 +46,10 @@ async function fetchImage(url, options = {}) {
 	const res = await fetch(url, options.fetchOptions);
 
 	if (!res.status >= 200 && res.status < 400) {
-		const err = new fetch.FetchError('Status was not ok, it was ' + res.status, 'not-ok');
+		const err = new fetch.FetchError(
+			'Status was not ok, it was ' + res.status,
+			'not-ok'
+		);
 		err.status = res.status;
 
 		throw err;
@@ -53,7 +58,10 @@ async function fetchImage(url, options = {}) {
 	const body = await res.buffer();
 	const type = fileType(body);
 
-	if ((type && options.imageMime.includes(type.mime)) || (options.imageMime.includes('image/svg+xml') && isSVG(body))) {
+	if (
+		(type && options.imageMime.includes(type.mime)) ||
+		(options.imageMime.includes('image/svg+xml') && isSVG(body))
+	) {
 		return body;
 	}
 

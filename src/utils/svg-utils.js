@@ -40,7 +40,9 @@ function getSVGSize(content) {
 
 	let width = parseInt(root.attr('width'), 10);
 	let height = parseInt(root.attr('height'), 10);
-	const [,, viewWidth, viewHeight] = (root.attr('viewBox') || '').split(/[,\s]+/).map(int => parseInt(int, 10));
+	const [, , viewWidth, viewHeight] = (root.attr('viewBox') || '')
+		.split(/[,\s]+/)
+		.map(int => parseInt(int, 10));
 
 	if (!viewHeight || !viewWidth) {
 		return;
