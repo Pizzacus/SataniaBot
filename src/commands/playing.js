@@ -158,7 +158,7 @@ async function exec(message, {query}) {
 	// Stop there is no games match
 	if (!gameName) {
 		embed.setTitle(`Playing ${query}`);
-		embed.addField('─'.repeat(16), '*(no one)*');
+		embed.addField('\u2800', '*(no one)*');
 		return message.channel.send(embed);
 	}
 
@@ -192,7 +192,7 @@ async function exec(message, {query}) {
 			break;
 		}
 
-		embed.addField('─'.repeat(16), description, true);
+		embed.addField('\u2800', description, true);
 	}
 
 	if (!embed.footer && numberOfResults > 1) {
