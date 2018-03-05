@@ -19,6 +19,33 @@ const options = {
 };
 
 /**
+ * Converts roman numbers to actual numbers
+ * Return NaN if not a valid roman number
+ * @param {string} str The number to convert
+ * @returns {number}
+ */
+function roman(str) {
+	let result = 0;
+
+	str = str.toUpperCase();
+
+	const decimal = [1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1];
+	const roman = ['M', 'CM', 'D', 'CD', 'C', 'XC', 'L', 'XL', 'X', 'IX', 'V', 'IV', 'I'];
+	for (let i = 0; i <= decimal.length; i++) {
+		while (str.startsWith(roman[i])) {
+			result += decimal[i];
+			str = str.replace(roman[i], '');
+		}
+	}
+
+	if (str.length !== 0) {
+		return NaN;
+	}
+
+	return result || NaN;
+}
+
+/**
  * Normalizes queries and results
  * By making everything lowercase, normalizing spaces
  * And removing non latin, numeral or spaces characters
@@ -27,7 +54,21 @@ const options = {
  * @return The normalized string
  */
 function normalizeQuery(string) {
-	const normalized = String(string).toLowerCase().replace(/\s+/g, ' ');
+	let normalized = String(string).toLowerCase().replace(/[\s\-_]+/g, ' ');
+
+	normalized = normalized
+		.split(/\s/g)
+		.map(word => {
+			const number = roman(word);
+
+			if (number) {
+				return number.toString(10);
+			}
+
+			return word;
+		})
+		.join(' ');
+
 	const latinOnly = normalized.replace(/[^a-z0-9\s]/g, '');
 
 	// The latinOnly version will not be returned
