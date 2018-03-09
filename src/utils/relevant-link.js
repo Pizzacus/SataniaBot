@@ -191,17 +191,17 @@ function resolveLinkItem(item) {
  * @property {string} type - The type of item found
  * @property {string} url - The URL of the image
  * @property {*} [source] - Whatever object represents the source which was used to find the image, for instance, if this function resolves a mention, this property will be the corresponding user object
- * @property {string} name - The internal name of the image, can be used for filenames and such
+ * @property {string} name - The displayable name of the image, may contain Discord markdown and such
  */
 
 /**
  * Find the relevant image in almost any objects from Discord.js that could possibly have an image associated to them.
  *
- * The main use for this function if to find the relevant image in a message.
+ * The main use for this function is to find the relevant image in a message.
  *
- * If multiple arguments are passed, the first one which can be resolved will be returned
+ * If multiple arguments are passed, the first one which can be resolved will be returned, if nothing can be resolved, 'null' will be returned
  * @param {...*} items - the items to resolve, usually just a Discord Message
- * @returns {ResolvedLink} The resolved image
+ * @returns {?ResolvedLink} The resolved image
  */
 function resolveLink(...items) {
 	if (items.length <= 1) {
