@@ -174,6 +174,12 @@ function resolveLinkItem(item) {
 		return null;
 	}
 
+	if (typeof link.name === 'string') {
+		// Adds an invisible "Word-Joiner" inside mentions
+		// To be 100% sure the bot can't be manipulated into pinging people
+		link.name = link.name.replace(/<(@[!&]?\d+)>/g, '<\u2060$1>');
+	}
+
 	return {
 		source: item,
 		...link
