@@ -154,17 +154,27 @@ function handleOperationalError(err, message) {
 				fs.mkdirSync(logDir);
 			}
 
-			resolve(Promise.all([
-				writeFile(path.join(logDir, `${logFile}.txt`), util.inspect(err)),
-				writeFile(path.join(logDir, `Message ${logFile}.txt`), util.inspect(message))
-			]));
+			resolve(
+				Promise.all([
+					writeFile(
+						path.join(logDir, `${logFile}.txt`),
+						util.inspect(err)
+					),
+					writeFile(
+						path.join(logDir, `Message ${logFile}.txt`),
+						util.inspect(message)
+					)
+				])
+			);
 		})
 	]).then(returned => returned[0]);
 }
 
 function exec(err, message) {
 	const errMessage = findErrorMessage(err, userErrors);
-	const shouldReply = message.channel.type !== 'text' || message.channel.permissionsFor(message.client.user).has('SEND_MESSAGES');
+	const shouldReply =
+		message.channel.type !== 'text' ||
+		message.channel.permissionsFor(message.client.user).has('SEND_MESSAGES');
 
 	if (errMessage && shouldReply) {
 		return message.channel.send(errMessage);
