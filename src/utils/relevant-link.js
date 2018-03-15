@@ -85,11 +85,19 @@ const handler = {
 		url: link.url,
 		name: humanizeURL(link.url)
 	}),
-	emoji: emoji => ({
-		type: 'emoji',
-		url: emoji.url,
-		name: emoji.toString()
-	}),
+	emoji: emoji => {
+		let name = emoji.toString();
+
+		if (emoji.custom && emoji.client && emoji.client.emojis.has(emoji.id)) {
+			name = emoji.client.emojis.get(emoji.id).toString();
+		}
+
+		return {
+			type: 'emoji',
+			url: emoji.url,
+			name
+		};
+	},
 	message: message => {
 		const content = getArgs(message);
 
@@ -97,7 +105,10 @@ const handler = {
 			message.attachments,
 			matchURLs(content),
 			message.mentions,
-			matchEmojis(content)
+			matchEmojis(content).map(emoji => {
+				emoji.client = message.client;
+				return emoji;
+			})
 		];
 
 		if (
