@@ -34,6 +34,14 @@ function humanizeURL(url) {
 	return domainToUnicode(new URL(url).hostname);
 }
 
+/**
+ * Normalize a sring to look for the guild name in
+ * @param {string} str The string to normalize
+ */
+function normalize(str) {
+	return str.toLowerCase().normalize();
+}
+
 const handler = {
 	guild: guild => ({
 		type: 'guild',
@@ -95,7 +103,7 @@ const handler = {
 		if (
 			message.guild && (
 				content.search(Discord.MessageMentions.EVERYONE_PATTERN) >= 0 ||
-				content.toLowerCase().includes(message.guild.name.toLowerCase())
+				normalize(content).includes(normalize(message.guild.name))
 			)
 		) {
 			resolve.push(message.guild);
