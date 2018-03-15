@@ -116,7 +116,7 @@ function handleOperationalError(err, message) {
 
 	let perms;
 
-	if (message.channel.type === 'text') {
+	if (message.channel instanceof Discord.GuildChannel) {
 		perms = message.channel.permissionsFor(message.client.user);
 	} else {
 		perms = new Discord.Permissions(67501120);
