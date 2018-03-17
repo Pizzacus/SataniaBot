@@ -104,13 +104,13 @@ function numberModifier(x) {
  * @returns {string[]}
  */
 function splitText(str, n) {
-	const words = str.split(/\b/);
+	const words = str.split(/\b(?!\W)/);
 	const results = [''];
 
 	let currentLine = 0;
 
 	for (const word of words) {
-		if (results[currentLine].length + word.length > n) {
+		if (results[currentLine].length + word.trim().length > n) {
 			results[currentLine] += '\n';
 
 			currentLine++;
