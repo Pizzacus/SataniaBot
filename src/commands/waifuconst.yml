@@ -48,9 +48,9 @@ types:
 
   - name: Lazy
     description: >-
-      A Waifu who doesn't do much of her days, skip school and is a total shut-in.
-      She sleeps all day long and can' be bothered enough to even shower or change
-      clothes
+      A Waifu who doesn't do much of her days, skips school and is a total shut-in.
+      She sleeps all day long and can't be bothered enough to even shower or change
+      clothes.
 
   - name: Creepy
     description: >-
@@ -90,7 +90,7 @@ types:
 
   - name: Tsundere
     description: >-
-      A Waifu who is quite defensive and cold thowards their love interest,
+      A Waifu who is quite defensive and cold towards their love interest,
       because they love them but can't admit it to themselves.
 
   - name: Goofy
@@ -146,7 +146,7 @@ types:
   - name: Average
     description: >-
       An average type of Waifu. When you think about it that type is way better
-      because all the other ones are crazy/stupid ones.
+      because all the other ones are crazy/stupid.
 
   - name: Random
     description: >-
