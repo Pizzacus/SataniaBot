@@ -28,7 +28,7 @@ const options = {
 
 const infoMethods = {
 	heightAndWeight(rnd) {
-		const heightMetric = (rnd() * 60) + 120;
+		const heightMetric = (numberModifier(rnd()) * 60) + 120;
 
 		function height() {
 			const heightImperial = Math.round(heightMetric / 2.54);
@@ -49,7 +49,7 @@ const infoMethods = {
 			const minWeight = 17 * ((heightMetric / 100) ** 2);
 			const maxWeight = 24 * ((heightMetric / 100) ** 2);
 
-			const kiloWeight = (rnd() * (maxWeight - minWeight)) + minWeight;
+			const kiloWeight = (numberModifier(rnd()) * (maxWeight - minWeight)) + minWeight;
 			const poundWeight = kiloWeight * 2.2046226218;
 
 			const displayKilo = Math.round(kiloWeight) + '\u2009kg';
@@ -186,7 +186,7 @@ function exec(message, {user}) {
 	const infos =
 		'\u2060' +
 		[...Object.values(infoMethods)]
-			.map(method => method(() => numberModifier(userRNG())))
+			.map(method => method(userRNG))
 			.join('\n');
 
 	return message.channel.send({
