@@ -1,178 +1,195 @@
+const fs = require('fs');
 const {Command} = require('discord-akairo');
 const seedrandom = require('seedrandom');
+const yaml = require('js-yaml');
 
-const waifuTypes = [
-	'Childish',
-	'Gloomy',
-	'Masochist',
-	'Lazy',
-	'Creepy',
-	'Dandere',
-	'Shy Stalker',
-	'Kuudere',
-	'Dere-Dere',
-	'Protective',
-	'Tsundere',
-	'Derp',
-	'Insane',
-	'Violent',
-	'Oujou-sama',
-	'Smart',
-	'Perverted',
-	'Potty-Mouth',
-	'Sadist',
-	'Possessive',
-	'Average',
-	'Random',
-	'"I\'ll do anything for you!"',
-	'Badass',
-	'Yandere',
-	'Obsessive',
-	'Best Friend',
-	'Trap',
-	'Cute Loli',
-	'Tomboy',
-	'Furry'
-];
+const constants = yaml.safeLoad(fs.readFileSync('src/commands/waifuconst.yml'));
 
-const ratings = [
-	'     \u2009Cuteness',
-	'    \u2009Lewdness',
-	'Friendliness',
-	' Intelligence'
-];
-
-const cupSizes = [
-	'AA',
-	'A',
-	'B',
-	'C',
-	'D',
-	'DD'
-];
-
-// Blood types rarity in Tokyo
-// According to http://nbakki.hatenablog.com/entry/ABO_Blood_Type_Distribution_in_Japan
-const bloodTypes = {
-	'A-': 0.0020,
-	'A+': 0.3980,
-	'O-': 0.0015,
-	'O+': 0.2990,
-	'B-': 0.0010,
-	'B+': 0.1990,
-	'AB-': 0.0005,
-	'AB+': 0.0990
-};
+const {
+	types: waifuTypes,
+	ratings,
+	cupSizes,
+	bloodTypes
+} = constants;
 
 const options = {
 	aliases: ['waifu', 'waifustats'],
-	args: [{
-		id: 'user',
-		type: 'relevant',
-		match: 'content',
-		default: message => message.author
-	}],
-	description: 'Get the waifu stats of you, or someone else!\n__**Examples:**__: `s!waifu @Example#1234`, `s!waifu`'
+	args: [
+		{
+			id: 'user',
+			type: 'relevant',
+			match: 'content',
+			default: message => message.author
+		}
+	],
+	description:
+		'Get the waifu stats of you, or someone else!\n__**Examples:**__: `s!waifu @Example#1234`, `s!waifu`'
 };
 
-function exec(message, args) {
-	const user = args.user;
+const infoMethods = {
+	heightAndWeight(rnd) {
+		const heightMetric = (rnd * 60) + 120;
 
-	/**
-	 * Generates a progression bar
-	 * @param {number} value Progression between 0 and 1
-	 * @param {number} size Size of the bar
-	 * @param {attay} [chars] The characters to use, the lower the index the lower the progression
-	 */
-	function bar(value, size, chars = [' ', '▌', '█']) {
-		let barString = '';
+		function height() {
+			const heightImperial = Math.round(heightMetric / 2.54);
 
-		for (let i = 0; i < size; i++) {
-			const charProgress = (value * size) - i;
-			barString += chars[
-				Math.min(chars.length - 1,
-					Math.max(0,
-						Math.floor(charProgress * chars.length)
-					)
-				)
-			];
+			const displayMetric = Math.round(heightMetric) + '\u2009cm';
+			const displayImperial =
+				Math.floor(heightImperial / 12) + '\'' +
+				Math.floor(heightImperial % 12) + '"';
+
+			return `        **Height**: ${displayImperial} / ${displayMetric}`;
 		}
 
-		return barString;
+		function weight() {
+			// Weight is calculated by aiming to obtain a realistical BMI between 17 and 24
+			// The BMI is a ratio to determine if a certain weight is anormal compared to a certain height
+			// A normal BMI is between 18.5-25, we just made it a little lower because waifus are thinnnnn
+
+			const minWeight = 17 * ((heightMetric / 100) ** 2);
+			const maxWeight = 24 * ((heightMetric / 100) ** 2);
+
+			const kiloWeight = (rnd * (maxWeight - minWeight)) + minWeight;
+			const poundWeight = kiloWeight * 2.2046226218;
+
+			const displayKilo = Math.round(kiloWeight) + '\u2009kg';
+			const displayPound = Math.round(poundWeight) + '\u2009lb';
+
+			return `       **Weight**: ${displayKilo} / ${displayPound}`;
+		}
+
+		return [height(), weight()].join('\n');
+	},
+	bloodType(rnd) {
+		let acc = 0;
+
+		for (const [type, val] of Object.entries(bloodTypes)) {
+			acc += val;
+
+			if (acc > rnd) {
+				return `**Blood Type**: ${type}`;
+			}
+		}
+
+		throw new Error('No appropriate blood types found.');
+	},
+	cupSize(rnd) {
+		const cupSize = cupSizes[Math.floor(cupSizes.length * rnd)];
+
+		if (rnd > 0.98) {
+			return '     **Cup Size**: Too big to be measured\n';
+		}
+
+		return (
+			`     **Cup Size**: '${cupSize}' in US Size ` +
+			`[(?)](http://www.sizeguide.net/bra-sizes.html)\n`
+		);
+	}
+};
+
+function numberModifier(x) {
+	// Okay I can understand that this might be really complicated : /
+	// https://www.desmos.com/calculator/7bchmabdjw
+	// Basically, if you pass a random value between 0 and 1 to this function,
+	// it makes the ones around 0.5 more frequent and rarer around 1 and 0
+	return (Math.cos((Math.cos((x + 0.5 + Math.floor(x + 0.5)) * Math.PI) + 1) * Math.PI / 2) / 2) + Math.floor(x + 0.5);
+}
+
+/**
+ * Split a text every N characters, always splitting at a space
+ * @param {string} str The text to split
+ * @param {number} n The maximal length of every chunk
+ * @returns {string[]}
+ */
+function splitText(str, n) {
+	const words = str.split(/\b/);
+	const results = [''];
+
+	let currentLine = 0;
+
+	for (const word of words) {
+		if (results[currentLine].length + word.length > n) {
+			results[currentLine] += '\n';
+
+			currentLine++;
+
+			results[currentLine] = '';
+		}
+
+		results[currentLine] += word;
 	}
 
-	function numberModifier(x) {
-		// Okay I can understand that this might be really complicated : /
-		// https://www.desmos.com/calculator/7bchmabdjw
-		// Basically, if you pass a random value between 0 and 1 to this function,
-		// it makes the ones around 0.5 more frequent and rarer around 1 and 0
-		return (Math.cos((Math.cos((x + 0.5 + Math.floor(x + 0.5)) * Math.PI) + 1) * Math.PI / 2) / 2) + Math.floor(x + 0.5);
+	return results
+		.map(line => line.trim())
+		.filter(line => line.length > 0);
+}
+
+/**
+ * Generates a progression bar
+ * @param {number} value Progression between 0 and 1
+ * @param {number} size Size of the bar
+ * @param {string[]} [chars] The characters to use, the lower the index the lower the progression
+ * @returns {string}
+ */
+function bar(value, size, chars = [' ', '▌', '█']) {
+	let barString = '';
+
+	for (let i = 0; i < size; i++) {
+		const charProgress = (value * size) - i;
+		barString +=
+			chars[
+				Math.min(
+					chars.length - 1,
+					Math.max(0, Math.floor(charProgress * chars.length))
+				)
+			];
 	}
 
+	return barString;
+}
+
+function exec(message, {user}) {
 	const userRNG = seedrandom('waifu-' + user.id);
 
 	// The type of the waifu
 	let type = waifuTypes[Math.floor(userRNG() * waifuTypes.length)];
 
 	if (user.id === message.client.user.id) {
-		type = 'BEST WAIFU';
+		type = {
+			name: 'BEST WAIFU',
+			description:
+				'This is the best Waifu and there is absolutely no way any ' +
+				'other waifus could even get CLOSE to that one because of ' +
+				'how amazing she is'
+		};
 	}
 
 	// The scores, we need to calculate all of them first to then divide them with their total when added
 	const scores = ratings.map(() => userRNG());
 	const total = scores.reduce((acc, score) => acc + score, 0);
 
-	// Loops over attributes to create the description
-	const description = ratings.reduce((description, rating, i) => {
-		const score = scores[i] / total;
-		const displayScore = (score * 100).toFixed(1).padStart(5, ' ') + '%';
+	let description = `*${splitText(type.description, 40).join('\n')}*\n\n`;
 
-		// Unicode Word-Joiner, allows us to avoid whitespace trimming
-		description += `**${rating}**: \`\u2060${displayScore} [${bar(score, 15)}]\`\n`;
-		return description;
-	}, '');
+	description += ratings
+		.map((rating, i) => {
+			const score = scores[i] / total;
+			const displayScore = (score * 100).toFixed(1).padStart(5, ' ') + '%';
 
-	let infos = '\u2060'; // Unicode Word-Joiner, same as above
+			// \u2060 is a Unicode Word-Joiner, allows us to avoid whitespace trimming
+			return `**${rating}**: \`\u2060${displayScore} [${bar(score, 15)}]\``;
+		})
+		.join('\n');
 
-	// === HEIGHT ===
-	const heightMetric = (numberModifier(userRNG()) * 60) + 120;
-	const heightImperial = Math.round(heightMetric / 2.54);
-
-	// \u2009 is a thin whitespace, it should be used between units and numbers
-	infos += `        **Height**: ${Math.round(heightMetric)}\u2009cm / ${Math.floor(heightImperial / 12)}'${heightImperial % 12}"\n`;
-
-	// === WEIGHT ===
-	// Weight is calculated by aiming to obtain a realistical BMI between 17 and 24
-	// The BMI is a ratio to determine if a certain weight is anormal compared to a certain height
-	// A normal BMI is between 18.5-25, we just made it a little lower because waifus are thinnnnn
-	const minWeight = 17 * ((heightMetric / 100) ** 2);
-	const maxWeight = 24 * ((heightMetric / 100) ** 2);
-	const weight = (numberModifier(userRNG()) * (maxWeight - minWeight)) + minWeight;
-
-	infos += `       **Weight**: ${Math.round(weight)}\u2009kg / ${Math.round(weight * 2.2046226218)}\u2009lb\n`;
-
-	// === BLOOD TYPE ===
-	let acc = 0;
-	const bloodVal = userRNG();
-	const bloodType = Object.entries(bloodTypes).find(val => {
-		acc += val[1];
-		return acc > bloodVal;
-	})[0];
-
-	infos += `**Blood Type**: ${bloodType}\n`;
-
-	// === CUP SIZE ==
-	const cupSize = userRNG();
-
-	if (cupSize > 0.98) {
-		infos += '     **Cup Size**: Too big to be measured\n';
-	} else {
-		infos += `     **Cup Size**: '${cupSizes[Math.floor(cupSizes.length * cupSize)]}' in US Size [(?)](http://www.sizeguide.net/bra-sizes.html)\n`;
-	}
+	// Unicode Word-Joiner, same as above
+	const infos =
+		'\u2060' +
+		[...Object.values(infoMethods)]
+			.map(method => method(numberModifier(userRNG())))
+			.join('\n');
 
 	return message.channel.send({
 		embed: {
-			title: `Waifu Type: __${type}__`,
+			title: `Waifu Type: __${type.name}__`,
 			description,
 			author: {
 				name: `Waifu ratings for ${user.displayName || user.username}`,
