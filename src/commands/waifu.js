@@ -3,6 +3,8 @@ const {Command} = require('discord-akairo');
 const seedrandom = require('seedrandom');
 const yaml = require('js-yaml');
 
+const nick = requireUtil('nick');
+
 const constants = yaml.safeLoad(fs.readFileSync('src/commands/waifuconst.yml'));
 
 const {
@@ -194,7 +196,7 @@ function exec(message, {user}) {
 			title: `Waifu Type: __${type.name}__`,
 			description,
 			author: {
-				name: `Waifu ratings for ${user.displayName || user.username}`,
+				name: `Waifu ratings for ${nick(user, message.channel)}`,
 				icon_url: user.displayAvatarURL || user.user.displayAvatarURL // eslint-disable-line camelcase
 			},
 			fields: [

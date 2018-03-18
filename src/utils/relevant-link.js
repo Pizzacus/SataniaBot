@@ -2,6 +2,7 @@ const {URL, domainToUnicode} = require('url');
 const Discord = require('discord.js');
 
 const {matchURLs, matchEmojis, Link, Emoji} = requireUtil('parse-message');
+const nick = requireUtil('nick');
 
 /**
  * Returns the content of a message handled by Akairo without the prefix and command
@@ -176,6 +177,11 @@ function resolveLinkItem(item) {
 
 		case Discord.Message:
 			link = handler.message(item);
+
+			if (link.type === 'user') {
+				link.name = nick(handler.source, item.channel);
+			}
+
 			break;
 
 		case Link:

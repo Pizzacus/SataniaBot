@@ -3,6 +3,7 @@ const {Command} = require('discord-akairo');
 const fetchImage = requireUtil('fetch-image');
 const relevantLink = requireUtil('relevant-link');
 const render = requireUtil('render');
+const nick = requireUtil('nick');
 
 const options = {
 	aliases: ['hug', 'hugs'],
@@ -50,7 +51,7 @@ async function exec(message, args) {
 		background: '#36393e'
 	});
 
-	await message.channel.send(`**${message.guild.member(message.author).displayName}** hugged **${link.name}** successfully! \u2764`, {
+	await message.channel.send(`**${nick(message.author, message.channel)}** hugged **${link.name}** successfully! \u2764`, {
 		files: [{
 			name: `${link.name}.jpeg`,
 			attachment: await image

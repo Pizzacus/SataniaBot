@@ -1,5 +1,7 @@
 const {Command} = require('discord-akairo');
 
+const nick = requireUtil('nick');
+
 const options = {
 	aliases: ['duel'],
 	args: [{
@@ -7,8 +9,6 @@ const options = {
 		type: 'relevant',
 		match: 'content'
 	}],
-	// TODO: Make s!duel work in DMs
-	channelRestriction: 'guild',
 	description: 'For fixing problems like real cowboys! One of you will win, the other will die, good luck!\n__**Examples:**__: `s!duel @Example#1234`'
 };
 
@@ -16,16 +16,17 @@ const winstreak = {};
 
 async function exec(message, args) {
 	const sleep = require('util').promisify(setTimeout);
+	const {channel} = message;
 
 	if (args.user) {
 		if (message.author.id === args.user.id) {
-			await message.channel.send(`**${message.guild.member(message.author).displayName}** successfully killed themselves with a bullet in their head 😂🔫`);
+			await message.channel.send(`**${nick(message.author, channel)}** successfully killed themselves with a bullet in their head 😂🔫`);
 			return;
 		}
 
-		let duelers = [message.guild.member(message.author), message.guild.member(args.user)];
+		let duelers = [message.author, args.user];
 
-		let duel = await message.channel.send(`**${duelers[0].displayName}** and **${duelers[1].displayName}** start a duel...`);
+		let duel = await message.channel.send(`**${nick(duelers[0], channel)}** and **${nick(duelers[1], channel)}** start a duel...`);
 
 		await sleep(1250);
 
@@ -35,7 +36,7 @@ async function exec(message, args) {
 		duel = await duel.edit(duel.content + ' **FIRE!**');
 		await sleep(1500);
 
-		if (Math.round(Math.random())) {
+		if (Math.random() > 0.5) {
 			duelers = duelers.reverse();
 		}
 
@@ -44,7 +45,7 @@ async function exec(message, args) {
 		winstreak[winner.id] = winstreak[winner.id] + 1 || 1;
 		winstreak[loser.id] = 0;
 
-		duel = await duel.edit(duel.content + `\n\n**${winner.displayName} won the duel** and killed **${loser.displayName}**!`);
+		duel = await duel.edit(duel.content + `\n\n**${nick(winner, channel)} won the duel** and killed **${nick(loser, channel)}**!`);
 		await sleep(1500);
 
 		await duel.edit(duel.content + ` \`Winstreak: ${winstreak[winner.id]}\``);

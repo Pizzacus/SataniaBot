@@ -3,6 +3,8 @@ const {Command} = require('discord-akairo');
 const seedrandom = require('seedrandom');
 const yaml = require('js-yaml');
 
+const nick = requireUtil('nick');
+
 let overrides = {};
 
 if (fs.existsSync('src/commands/gay-overrides.yml')) {
@@ -93,7 +95,7 @@ function exec(message, args) {
 		embed: {
 			title: `Rating: __${rating}__`,
 			author: {
-				name: `Gay ratings for ${user.displayName || user.username}`,
+				name: `Gay ratings for ${nick(user, message.channel)}`,
 				icon_url: user.displayAvatarURL || user.user.displayAvatarURL // eslint-disable-line camelcase
 			},
 			fields: [
