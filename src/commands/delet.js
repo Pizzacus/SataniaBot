@@ -10,7 +10,7 @@ const options = {
 		id: 'user',
 		type: 'relevant',
 		match: 'content',
-		default: message => message.guild.member(message.author)
+		default: message => message.author
 	}],
 	description: 'Sends a picture of you in attac mode to show someone they should really delete their post\n(Your avatar is used by default)\n' +
 		'__**Examples:**__ `s!delet`, `s!delet @Example#1234`, `s!delet :CustomEmoji:`, `s!delet` with a file attached'

@@ -158,6 +158,12 @@ async function exec(message, {query}) {
 	// The embed which will be fullfilled and then sent
 	const embed = new Discord.RichEmbed();
 
+	if (!message.guild) {
+		return message.channel.send(
+			'**Error:** This command must be used in a server.'
+		);
+	}
+
 	// Logic when the user does not specify a query
 	// Sets the query to the user's playing status
 	// Or ask the user to specify a query if they aren't playing anything
