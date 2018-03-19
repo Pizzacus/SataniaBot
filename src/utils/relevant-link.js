@@ -106,10 +106,7 @@ const handler = {
 			message.attachments,
 			matchURLs(content),
 			message.mentions,
-			matchEmojis(content).map(emoji => {
-				emoji.client = message.client;
-				return emoji;
-			})
+			matchEmojis(content)
 		];
 
 		if (
@@ -180,6 +177,14 @@ function resolveLinkItem(item) {
 
 			if (link && link.type === 'user') {
 				link.name = nick(handler.source, item.channel);
+			}
+
+			if (link && link.type === 'emoji') {
+				const emoji = link.source;
+
+				if (emoji.custom && item.client.emojis.has(emoji.id)) {
+					link.name = item.client.emojis.get(emoji.id).toString();
+				}
 			}
 
 			break;
