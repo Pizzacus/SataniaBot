@@ -178,7 +178,7 @@ function resolveLinkItem(item) {
 		case Discord.Message:
 			link = handler.message(item);
 
-			if (link.type === 'user') {
+			if (link && link.type === 'user') {
 				link.name = nick(handler.source, item.channel);
 			}
 
