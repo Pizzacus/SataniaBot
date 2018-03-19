@@ -21,6 +21,8 @@ const client = new AkairoClient({
 	commandDirectory: './src/commands/',
 	listenerDirectory: './src/listeners/',
 	inhibitorDirectory: './src/inhibitors/'
+}, {
+	apiRequestMethod: 'burst'
 });
 
 if (!client.shard) {
