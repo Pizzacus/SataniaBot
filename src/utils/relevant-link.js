@@ -136,7 +136,21 @@ const handler = {
 			}
 		}
 
-		return resolveLink(resolve);
+		const link = resolveLink(resolve);
+
+		if (link && link.type === 'user') {
+			link.name = nick(handler.source, message.channel);
+		}
+
+		if (link && link.type === 'emoji') {
+			const emoji = link.source;
+
+			if (emoji.custom && message.client.emojis.has(emoji.id)) {
+				link.name = message.client.emojis.get(emoji.id).toString();
+			}
+		}
+
+		return link;
 	}
 };
 
@@ -174,19 +188,6 @@ function resolveLinkItem(item) {
 
 		case Discord.Message:
 			link = handler.message(item);
-
-			if (link && link.type === 'user') {
-				link.name = nick(handler.source, item.channel);
-			}
-
-			if (link && link.type === 'emoji') {
-				const emoji = link.source;
-
-				if (emoji.custom && item.client.emojis.has(emoji.id)) {
-					link.name = item.client.emojis.get(emoji.id).toString();
-				}
-			}
-
 			break;
 
 		case Link:
