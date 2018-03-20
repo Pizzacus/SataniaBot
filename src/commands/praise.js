@@ -10,18 +10,23 @@ const options = {
 async function exec(message) {
 	let abortReacts = false;
 	const reacts = [
-		'\uD83C\uDDF5',
-		'\uD83C\uDDF7',
-		'\uD83C\uDDE6',
-		'\uD83C\uDDEE',
-		'\uD83C\uDDF8',
-		'\uD83C\uDDEA'
+		'\uD83C\uDDF5', // P
+		'\uD83C\uDDF7', // R
+		'\uD83C\uDDE6', // A
+		'\uD83C\uDDEE', // I
+		'\uD83C\uDDF8', // S
+		'\uD83C\uDDEA' // E
 	];
 
 	if (message.client.guilds.has('310180409541394432')) {
-		reacts.push(message.client.guilds.get('310180409541394432').emojis.filter(value => {
-			return value.name.startsWith('Satania');
-		}).random());
+		reacts.push(
+			message.client.guilds
+				.get('310180409541394432')
+				.emojis.filter(value =>
+					value.name.replace(/^gif/, '').startsWith('Satania')
+				)
+				.random()
+		);
 	}
 
 	function handleEdit(oldMessage, newMessage) {
