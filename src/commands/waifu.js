@@ -102,30 +102,33 @@ function numberModifier(x) {
 /**
  * Split a text every N characters, always splitting at a space
  * @param {string} str The text to split
- * @param {number} n The maximal length of every chunk
+ * @param {number} length The maximal length of every chunk
  * @returns {string[]}
  */
-function splitText(str, n) {
-	const words = str.split(/\b(?!\W)/);
-	const results = [''];
+function splitText(str, length) {
+	const lines = str.split(/\n\r?|\r\n?/);
+	const results = [];
 
-	let currentLine = 0;
+	for (const line of lines) {
+		const words = line.split(/\b(?!\W)/);
 
-	for (const word of words) {
-		if (results[currentLine].length + word.trim().length > n) {
-			results[currentLine] += '\n';
+		results.push('');
 
-			currentLine++;
+		for (const word of words) {
+			const newline = results[results.length - 1] + word;
 
-			results[currentLine] = '';
+			if (
+				results[results.length - 1].length !== 0 &&
+				newline.trim().length >= length
+			) {
+				results.push('');
+			}
+
+			results[results.length - 1] += word;
 		}
-
-		results[currentLine] += word;
 	}
 
-	return results
-		.map(line => line.trim())
-		.filter(line => line.length > 0);
+	return results.map(line => line.trim());
 }
 
 /**

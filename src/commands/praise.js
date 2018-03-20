@@ -20,9 +20,8 @@ async function exec(message) {
 
 	if (message.client.guilds.has('310180409541394432')) {
 		reacts.push(
-			message.client.guilds
-				.get('310180409541394432')
-				.emojis.filter(value =>
+			message.client.guilds.get('310180409541394432').emojis
+				.filter(value =>
 					value.name.replace(/^gif/, '').startsWith('Satania')
 				)
 				.random()
