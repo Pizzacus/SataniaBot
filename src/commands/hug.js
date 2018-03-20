@@ -53,7 +53,7 @@ async function exec(message, args) {
 
 	await message.channel.send(`**${nick(message.author, message.channel)}** hugged **${link.name}** successfully! \u2764`, {
 		files: [{
-			name: `${link.name}.jpeg`,
+			name: 'image.jpeg',
 			attachment: await image
 				.jpeg({
 					quality: 50

@@ -47,7 +47,7 @@ async function exec(message, args) {
 
 	await message.channel.send({
 		files: [{
-			name: `${link.name}.jpeg`,
+			name: 'image.jpeg',
 			attachment: await image
 				.jpeg({
 					quality: 50
