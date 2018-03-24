@@ -34,6 +34,14 @@ const userErrors = {
 
 		50013: 'I do not have permission to do this, please ask the moderators of this server to give me the appropriate permissions'
 	},
+	FetchImageError: {
+		'[prefix]': 'An error occured while fetching the image',
+		'[default]': 'Unknown Error',
+
+		'not-ok': err => `The server returned an **error ${err.status}**`,
+		'no-images': 'No images were found on that page',
+		'image-expected': 'The server returned an unexpected response'
+	},
 
 	'[prefix]': 'Error',
 
