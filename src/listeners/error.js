@@ -179,6 +179,8 @@ function handleOperationalError(err, message) {
 }
 
 function exec(err, message) {
+	message.channel.stopTyping(true);
+
 	const errMessage = findErrorMessage(err, userErrors);
 	const shouldReply =
 		message.channel.type !== 'text' ||
