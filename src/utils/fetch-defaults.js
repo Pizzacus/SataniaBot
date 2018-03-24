@@ -1,5 +1,4 @@
 const path = require('path');
-const {format: formats} = require('sharp');
 
 const pkg = require(path.resolve('package.json'));
 const config = requireUtil('config');
