@@ -207,7 +207,7 @@ class Emoji {
  * @returns {Emoji[]} The emojis matched
  */
 function matchEmojis(content) {
-	const emojiRegex = require('emoji-regex')();
+	const emojiRegex = requireUtil('emoji-regex')();
 
 	const customRegex = /<(a?):(\w+):(\d+)>/g;
 	const emojis = [];
