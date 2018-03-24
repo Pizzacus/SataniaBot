@@ -23,20 +23,12 @@ async function exec(message, args) {
 		return;
 	}
 
-	message.channel.startTyping(true);
-
-	const avatar = await fetchImage(link.url);
-
-	if (!avatar) {
-		await message.reply('I wasn\'t able to find any image to use ;-;');
-		await message.channel.stopTyping();
-		return;
-	}
+	await message.channel.startTyping();
 
 	const image = await render({
 		image: './assets/kiss.png'
 	}, {
-		image: avatar,
+		image: fetchImage(link.url),
 		height: 240,
 		width: 240,
 		x: 70,

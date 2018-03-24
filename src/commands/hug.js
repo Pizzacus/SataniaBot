@@ -23,15 +23,7 @@ async function exec(message, args) {
 		return;
 	}
 
-	message.channel.startTyping();
-
-	const avatar = await fetchImage(link.url);
-
-	if (!avatar) {
-		await message.reply('I wasn\'t able to find any image to use ;-;');
-		await message.channel.stopTyping();
-		return;
-	}
+	await message.channel.startTyping();
 
 	const image = await render({
 		image: './assets/hug.jpg'
@@ -43,7 +35,7 @@ async function exec(message, args) {
 		y: 45,
 		background: '#36393e'
 	}, {
-		image: avatar,
+		image: fetchImage(link.url),
 		height: 275,
 		width: 275,
 		x: 290,

@@ -39,18 +39,10 @@ async function exec(message, args) {
 		return;
 	}
 
-	const avatar = await fetchImage(link.url);
-
-	if (!avatar) {
-		await message.reply('I wasn\'t able to find any image to use ;-;');
-		await message.channel.stopTyping();
-		return;
-	}
-
 	const image = await render({
 		image: './assets/pat.jpg'
 	}, {
-		image: avatar,
+		image: fetchImage(link.url),
 		height: 600,
 		width: 600,
 		x: 125,

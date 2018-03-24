@@ -24,20 +24,12 @@ async function exec(message, args) {
 		return;
 	}
 
-	message.channel.startTyping();
-
-	const avatar = await fetchImage(link.url);
-
-	if (!avatar) {
-		await message.reply('I wasn\'t able to find any image to use ;-;');
-		await message.channel.stopTyping();
-		return;
-	}
+	await message.channel.startTyping();
 
 	const image = await render({
 		image: './assets/delet.png'
 	}, {
-		image: avatar,
+		image: fetchImage(link.url),
 		height: 235,
 		width: 235,
 		x: 10,

@@ -1,6 +1,6 @@
 const {Command} = require('discord-akairo');
 
-async function exec(message) {
+function exec(message) {
 	return message.channel.startTyping();
 }
 
