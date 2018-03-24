@@ -61,22 +61,22 @@ function parseConvertionInput(input) {
 					type: 'metric',
 					meters: 0
 				};
+			}
 
-				if (/^(millimeters?|mm)$/i.test(value[2])) {
-					units.meters += value[1] * 0.001;
-				} else if (/^(centimeters?|cm)$/i.test(value[2])) {
-					units.meters += value[1] * 0.01;
-				} else if (/^(decimeters?|dm)$/i.test(value[2])) {
-					units.meters += value[1] * 0.1;
-				} else if (/^(meters?|m)$/i.test(value[2])) {
-					units.meters += Number(value[1]);
-				} else if (/^(decameters?|dam)$/i.test(value[2])) {
-					units.meters += value[1] * 10;
-				} else if (/^(hectometers?|hm)$/i.test(value[2])) {
-					units.meters += value[1] * 100;
-				} else if (/^(kilometers?|km)$/i.test(value[2])) {
-					units.meters += value[1] * 1000;
-				}
+			if (/^(millimeters?|mm)$/i.test(value[2])) {
+				units.meters += value[1] * 0.001;
+			} else if (/^(centimeters?|cm)$/i.test(value[2])) {
+				units.meters += value[1] * 0.01;
+			} else if (/^(decimeters?|dm)$/i.test(value[2])) {
+				units.meters += value[1] * 0.1;
+			} else if (/^(meters?|m)$/i.test(value[2])) {
+				units.meters += Number(value[1]);
+			} else if (/^(decameters?|dam)$/i.test(value[2])) {
+				units.meters += value[1] * 10;
+			} else if (/^(hectometers?|hm)$/i.test(value[2])) {
+				units.meters += value[1] * 100;
+			} else if (/^(kilometers?|km)$/i.test(value[2])) {
+				units.meters += value[1] * 1000;
 			}
 		} else {
 			return {
