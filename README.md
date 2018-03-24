@@ -4,7 +4,7 @@
   <p>
     <a href="https://discord.gg/rC9ebp7"><img src="https://discordapp.com/api/guilds/310180409541394432/embed.png"></a>
     <a href="https://codeclimate.com/github/Pizzacus/SataniaBot/maintainability"><img src="https://api.codeclimate.com/v1/badges/a191a5b431b162fd5af1/maintainability" /></a>
-    <a href="https://choosealicense.com/licenses/agpl-3.0/"><img src="https://img.shields.io/github/license/Pizzacus/SataniaBot.svg" alt="License"/></a>
+    <a href="https://choosealicense.com/licenses/agpl-3.0/"><img src="https://img.shields.io/github/license/Pizzacus/SataniaBot.svg" alt="License"/></a><br>
     <a href="https://david-dm.org/Pizzacus/SataniaBot"><img src="https://img.shields.io/david/Pizzacus/SataniaBot.svg" alt="Dependencies"/></a>
     <a href="https://github.com/sindresorhus/xo"><img src="https://img.shields.io/badge/code_style-XO-5ed9c7.svg" alt="Codestyle: XO"/></a>
   </p>
