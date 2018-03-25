@@ -9,14 +9,14 @@
 const writeFile = require('util').promisify(require('fs').writeFile);
 const fetch = require('make-fetch-happen');
 
-let regenerate;
+let Trie;
 
 try {
-	regenerate = require('regenerate');
+	Trie = require('regexgen').Trie;
 } catch (err) {
 	if (err.code === 'MODULE_NOT_FOUND') {
 		console.error(
-			'\nThe module \'regenerate\' could not be found\n' +
+			'\nThe module \'regexgen\' could not be found\n' +
 			'It is part of the Dev Dependancies, please install those to run this script\n'
 		);
 	}
@@ -66,7 +66,7 @@ fetch('https://api.github.com/repos/twitter/twemoji/contents/2')
 		console.log(`${res.tree.length} emojis listed\n`);
 		console.log('3. Generate the regex and dump it to the file');
 
-		const set = regenerate();
+		const set = new Trie();
 
 		for (const {path: filename} of res.tree) {
 			if (!filename.endsWith('.svg')) {
@@ -89,9 +89,7 @@ fetch('https://api.github.com/repos/twitter/twemoji/contents/2')
 
 module.exports = () => {
 	return /${
-		set.toString({
-			hasUnicodeFlag: true
-		})
+		set.toString('u')
 	}/gu;
 };
 `;
