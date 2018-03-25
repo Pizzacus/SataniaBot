@@ -18,10 +18,4 @@ if (config.download.cache) {
 	options.cacheManager = path.resolve('data/cache');
 }
 
-const accepts = requireUtil('get-supported-formats')();
-
-accepts.push('image/*;q=0.8', 'text/html;q=0.5', '*/*;q=0.1');
-
-options.headers.Accept = accepts.join(', ');
-
 module.exports = options;
