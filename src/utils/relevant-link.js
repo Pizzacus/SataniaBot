@@ -32,7 +32,13 @@ function getArgs(message) {
  * @returns {string} The humanized URL
  */
 function humanizeURL(url) {
-	return domainToUnicode(new URL(url).hostname);
+	url = String(url);
+
+	try {
+		return domainToUnicode(new URL(url).hostname);
+	} catch (err) {
+		return url;
+	}
 }
 
 /**
