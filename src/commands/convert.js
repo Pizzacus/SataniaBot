@@ -144,6 +144,22 @@ function parseUnits(text, unitSystems) {
 	return parts;
 }
 
+/**
+ * Convert a number in a base unit to a user-friendly (approximated) form,
+ * eg. 20000 m -> 20 kilometers
+ * @param {array<LengthUnit>} units An array with possible units
+ * @param {number} value The value in the base unit
+ * @returns {string} A user-friendly representation of the value
+ */
+function prefixUnit(units, value) {
+	const unit = units.reduce((chosenUnit, currentUnit) =>
+		currentUnit.multiplier <= value ? currentUnit : chosenUnit
+	);
+	const length = value / unit.multiplier;
+
+	return `${Math.round(length * 100) / 100} ${unit.names[1]}`;
+}
+
 function exec(message, args) {
 	const unitSystems = [imperialUnits, metricUnits];
 	const input = parseUnits(args.convert, unitSystems);
@@ -169,29 +185,33 @@ function exec(message, args) {
 	const inch = 0.0254;
 	let output;
 
-	if (units === imperialUnits) {
-		const meters = sum * inch;
+	switch (units) {
+		case imperialUnits: {
+			const meters = sum * inch;
+			const displayedUnits = metricUnits
+				.filter(unit => ['km', 'm', 'cm', 'mm'].includes(unit.symbol));
 
-		if (meters >= 1000) {
-			output = `${Math.round(meters / 1000 * 100) / 100} kilometers`;
-		} else if (meters >= 1) {
-			output = `${Math.round(meters * 100) / 100} meters`;
-		} else if (meters >= 0.01) {
-			output = `${Math.round(meters * 100 * 100) / 100} centimeters`;
-		} else {
-			output = `${Math.round(meters * 1000 * 100000) / 100000} millimeters`;
+			output = prefixUnit(displayedUnits, meters);
+
+			break;
 		}
-	} else if (units === metricUnits) {
-		const inches = sum / inch;
+		case metricUnits: {
+			const inches = sum / inch;
+			const displayedUnits = imperialUnits
+				.filter(unit => ['ml', 'ft', 'in'].includes(unit.symbol));
 
-		if (inches >= 63360) {
-			output = `${Math.round(inches / 63360 * 100) / 100} miles`;
-		} else if (inches > 180) {
-			output = `${Math.round(inches / 12 * 100) / 100} feet`;
-		} else if (inches >= 12) {
-			output = `${Math.floor(inches / 12)}'${Math.floor(inches) % 12}"`;
-		} else {
-			output = `${Math.round(inches * 100000) / 100000} inches`;
+			// A special case to use the feet'inches" format when the number is
+			// between 1 and 15 feet
+			if (inches <= 180 && inches >= 12) {
+				output = `${Math.floor(inches / 12)}'${Math.floor(inches) % 12}"`;
+			} else {
+				output = prefixUnit(displayedUnits, inches);
+			}
+
+			break;
+		}
+		default: {
+			output = 'impossible';
 		}
 	}
 
