@@ -1,8 +1,22 @@
+const {Command} = require('discord-akairo');
+
+const options = {
+	aliases: ['convert'],
+	args: [{
+		id: 'convert',
+		match: 'content'
+	}],
+	description: 'Very handy command to convert lengths from the metric ' +
+		'system to imperial, and vice-versa!\n' +
+		'__**Examples:**__: `s!convert 1km`, `s!convert 6.5 miles`, ' +
+		'`s!convert 6 meters`, `s!convert 5\'6"`'
+};
+
 /**
- * A length unit used for unit convertion
- * @typedef {Object} LengthUnit
+ * A length unit used for unit conversion
+ * @typedef {object} LengthUnit
  * @property {string} symbol The symbol of a unit
- * @property {Array<string>} names User-friendly names of the unit
+ * @property {array<string>} names User-friendly names of the unit
  * @property {number} multiplier The multiplier relative to the base unit (which
  *  has this property set to 1)
  */
@@ -80,15 +94,15 @@ const metricUnits = [
 /**
  * Convert a user-friendly name of a unit to the unit's symbol, eg.
  * "meters" -> "m", "meter" -> "m", "m" -> "m"
- * @param {Array<LengthUnit>} units An array of units to look up
+ * @param {array<LengthUnit>} units An array of units to look up
  * @param {string} text A string to be matched
- * @returns {?Array} An array containing all results of RegExp#exec or null
+ * @returns {?string} The unit's symbol or null
  */
 function getUnitSymbol(units, unitName) {
-	const matchingUnits = units
-		.filter(unit => unit.symbol === unitName || unit.names.includes(unitName));
+	const matchingUnit = units
+		.find(unit => unit.symbol === unitName || unit.names.includes(unitName));
 
-	return matchingUnits.length > 0 ? matchingUnits[0].symbol : null;
+	return matchingUnit ? matchingUnit.symbol : null;
 }
 
 /**
@@ -96,7 +110,7 @@ function getUnitSymbol(units, unitName) {
  * the global flag can match multiple values in a single string)
  * @param {RegExp} regexp A RegExp to match the string against
  * @param {string} text A string to be matched
- * @returns {Array} An array containing all results of RegExp#exec
+ * @returns {array} An array containing all results of RegExp#exec
  */
 function getAllMatches(regexp, text) {
 	const results = [];
@@ -113,8 +127,8 @@ function getAllMatches(regexp, text) {
  * Parse user input containing length units and return them in a normalized
  * format of an array of [number, unit symbol]
  * @param {string} text User input
- * @param {Array<Array<LengthUnit>>} unitSystems All supported unit systems
- * @returns {Array<Array<number, string>>} An array of recognized units and values
+ * @param {array<array<LengthUnit>>} unitSystems All supported unit systems
+ * @returns {array<array<number, string>>} An array of recognized units and values
  */
 function parseUnits(text, unitSystems) {
 	const allUnits = unitSystems.reduce((units, system) => [...units, ...system]);
@@ -130,31 +144,17 @@ function parseUnits(text, unitSystems) {
 	return parts;
 }
 
-const {Command} = require('discord-akairo');
-
-const options = {
-	aliases: ['convert'],
-	args: [{
-		id: 'convert',
-		match: 'content'
-	}],
-	description: 'Very handy command to convert lengths from the metric ' +
-		'system to imperial, and vice-versa!\n' +
-		'__**Examples:**__: `s!convert 1km`, `s!convert 6.5 miles`, ' +
-		'`s!convert 6 meters`, `s!convert 5\'6"`'
-};
-
 function exec(message, args) {
 	const unitSystems = [imperialUnits, metricUnits];
 	const input = parseUnits(args.convert, unitSystems);
 	const units = unitSystems
-		.filter(units =>
+		.find(units =>
 			input.every(part => units.some(unit => unit.symbol === part.symbol))
-		)[0];
+		);
 
 	if (input.length === 0 || !units) {
 		// User's input is incomprehensible, give up
-		return message.reply('There was an error processing your mesurements.\n' +
+		return message.reply('There was an error processing your measurements.\n' +
 			'Maybe you typed something like `5\'4` or `1m50`, these ' +
 			'notations aren\'t supported, use `5\'4"` and `1.5m` instead.');
 	}
@@ -162,7 +162,7 @@ function exec(message, args) {
 	// The unit is inches for imperial and meters for metric
 	const sum = input
 		.map(part => {
-			const unit = units.filter(unit => unit.symbol === part.symbol)[0];
+			const unit = units.find(unit => unit.symbol === part.symbol);
 			return part.value * unit.multiplier;
 		}).reduce((sum, number) => sum + number);
 
