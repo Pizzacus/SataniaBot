@@ -84,7 +84,7 @@ async function fetchImage(...urls) {
 	} else {
 		// Since the last argument wasn't the options, we can put it back
 		urls.push(customOptions);
-		options = defaultOptions;
+		options = {...defaultOptions};
 	}
 
 	if (!urls.every(elem => typeof elem === 'string')) {
