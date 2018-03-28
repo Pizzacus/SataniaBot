@@ -2,11 +2,14 @@ const {Command} = require('discord-akairo');
 
 const options = {
 	aliases: ['convert'],
-	args: [{
-		id: 'convert',
-		match: 'content'
-	}],
-	description: 'Very handy command to convert lengths from the metric ' +
+	args: [
+		{
+			id: 'convert',
+			match: 'content'
+		}
+	],
+	description:
+		'Very handy command to convert lengths from the metric ' +
 		'system to imperial, and vice-versa!\n' +
 		'__**Examples:**__: `s!convert 1km`, `s!convert 6.5 miles`, ' +
 		'`s!convert 6 meters`, `s!convert 5\'6"`'
@@ -99,8 +102,9 @@ const metricUnits = [
  * @returns {?string} The unit's symbol or null
  */
 function getUnitSymbol(units, unitName) {
-	const matchingUnit = units
-		.find(unit => unit.symbol === unitName || unit.names.includes(unitName));
+	const matchingUnit = units.find(
+		unit => unit.symbol === unitName || unit.names.includes(unitName)
+	);
 
 	return matchingUnit ? matchingUnit.symbol : null;
 }
@@ -135,9 +139,12 @@ function parseUnits(text, unitSystems) {
 	const parts = getAllMatches(/(-?[\d,.]+)(?:\s?([^\d\s]+))?/g, text)
 		.map(match => match.slice(1, 3))
 		.map(part => ({
-			value: parseFloat(/^[\d]+,[\d]+$/.test(part[0]) ?
-				part[0].replace(',', '.') :
-				part[0].replace(/,/g, ''), 10),
+			value: parseFloat(
+				/^[\d]+,[\d]+$/.test(part[0]) ?
+					part[0].replace(',', '.') :
+					part[0].replace(/,/g, ''),
+				10
+			),
 			symbol: getUnitSymbol(allUnits, part[1])
 		}));
 
@@ -152,8 +159,9 @@ function parseUnits(text, unitSystems) {
  * @returns {string} A user-friendly representation of the value
  */
 function prefixUnit(units, value) {
-	const unit = units.reduce((chosenUnit, currentUnit) =>
-		currentUnit.multiplier <= value ? currentUnit : chosenUnit
+	const unit = units.reduce(
+		(chosenUnit, currentUnit) =>
+			currentUnit.multiplier <= value ? currentUnit : chosenUnit
 	);
 	const length = value / unit.multiplier;
 
@@ -163,16 +171,17 @@ function prefixUnit(units, value) {
 function exec(message, args) {
 	const unitSystems = [imperialUnits, metricUnits];
 	const input = parseUnits(args.convert, unitSystems);
-	const units = unitSystems
-		.find(units =>
-			input.every(part => units.some(unit => unit.symbol === part.symbol))
-		);
+	const units = unitSystems.find(units =>
+		input.every(part => units.some(unit => unit.symbol === part.symbol))
+	);
 
 	if (input.length === 0 || !units) {
 		// User's input is incomprehensible, give up
-		return message.reply('There was an error processing your measurements.\n' +
+		return message.reply(
+			'There was an error processing your measurements.\n' +
 			'Maybe you typed something like `5\'4` or `1m50`, these ' +
-			'notations aren\'t supported, use `5\'4"` and `1.5m` instead.');
+			'notations aren\'t supported, use `5\'4"` and `1.5m` instead.'
+		);
 	}
 
 	// The unit is inches for imperial and meters for metric
@@ -180,7 +189,8 @@ function exec(message, args) {
 		.map(part => {
 			const unit = units.find(unit => unit.symbol === part.symbol);
 			return part.value * unit.multiplier;
-		}).reduce((sum, number) => sum + number);
+		})
+		.reduce((sum, number) => sum + number);
 
 	const inch = 0.0254;
 	let output;
@@ -188,8 +198,9 @@ function exec(message, args) {
 	switch (units) {
 		case imperialUnits: {
 			const meters = sum * inch;
-			const displayedUnits = metricUnits
-				.filter(unit => ['km', 'm', 'cm', 'mm'].includes(unit.symbol));
+			const displayedUnits = metricUnits.filter(unit =>
+				['km', 'm', 'cm', 'mm'].includes(unit.symbol)
+			);
 
 			output = prefixUnit(displayedUnits, meters);
 
@@ -197,8 +208,9 @@ function exec(message, args) {
 		}
 		case metricUnits: {
 			const inches = sum / inch;
-			const displayedUnits = imperialUnits
-				.filter(unit => ['ml', 'ft', 'in'].includes(unit.symbol));
+			const displayedUnits = imperialUnits.filter(unit =>
+				['ml', 'ft', 'in'].includes(unit.symbol)
+			);
 
 			// A special case to use the feet'inches" format when the number is
 			// between 1 and 15 feet
