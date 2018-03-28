@@ -110,7 +110,7 @@ async function actuallyFetchImages(urls, options) {
 		}
 
 		try {
-			const image = fetchSingleImage(url, options);
+			const image = await fetchSingleImage(url, options);
 
 			if (image) {
 				return image;
