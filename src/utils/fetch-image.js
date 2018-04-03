@@ -13,18 +13,35 @@ const defaultOptions = {
 	imageMime: formats,
 	maxFetch: 4,
 	targetQueries: [
+		// Custom meta tag in case anyone needs it to make Satania use another pic
+		// I do agree this is very useless and people can do it based on th User-Agent
+		// But hey, you never know
 		'meta[name="sataniabot_image" i]',
 		'meta[property="sataniabot_image" i]',
+
+		// https://developer.twitter.com/en/docs/tweets/optimize-with-cards/overview/summary-card-with-large-image
 		'meta[name="twitter:image" i]',
-		'meta[property="og:image:secure_url" i]',
-		'meta[property="og:image:url" i]',
-		'meta[property="og:image" i]',
 		'meta[property="twitter:image" i]',
+
+		// https://ogp.me/
+		'meta[property="og:image:secure_url" i]',
 		'meta[name="og:image:secure_url" i]',
+		'meta[property="og:image:url" i]',
 		'meta[name="og:image:url" i]',
+		'meta[property="og:image" i]',
 		'meta[name="og:image" i]',
+
+		// https://support.google.com/customsearch/answer/1626955?hl=en
+		'meta[name="thumbnail" i]',
+		'meta[property="thumbnail" i]',
+
+		// https://stackoverflow.com/questions/19274463/what-is-link-rel-image-src
 		'link[rel="image_src" i]',
+
+		// Websites with nothing but an image
 		'body > img:only-child',
+
+		// --- Site-specific properties ---
 		'.ProfileAvatar-container', // Twitter PFPs
 		'.postContainer.opContainer .fileThumb' // 4chan threads
 	],
