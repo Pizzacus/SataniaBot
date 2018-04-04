@@ -11,7 +11,8 @@ const options = {
 	size: config.download.maxSize || 10 * 1024 * 1024,
 	headers: {
 		'User-Agent': `${pkg.name}/${pkg.version} (+${homepage})`
-	}
+	},
+	strictSSL: true
 };
 
 if (config.download.cache) {
