@@ -26,12 +26,19 @@ function nick(user, channel) {
 	let name = user.username;
 
 	// Group DM channels with nicknames
-	if (channel instanceof Discord.GroupDMChannel && channel.nicks.has(user.id)) {
+	if (
+		channel instanceof Discord.GroupDMChannel &&
+		channel.nicks &&
+		channel.nicks.has(user.id)
+	) {
 		name = channel.nicks.get(user.id);
 	}
 
 	// Voice channels, Guild Text Channels, and Category Channels
-	if (channel instanceof Discord.GuildChannel && channel.guild.members.has(user.id)) {
+	if (
+		channel instanceof Discord.GuildChannel &&
+		channel.guild.members.has(user.id)
+	) {
 		name = channel.guild.members.get(user.id).displayName;
 	}
 
