@@ -5,7 +5,8 @@ const yaml = require('js-yaml');
 
 const nick = requireUtil('nick');
 
-const constants = yaml.safeLoad(fs.readFileSync('src/commands/waifuconst.yml'));
+const constants = yaml.safeLoad(fs.readFileSync('src/commands/waifu-const.yml'));
+const overrides = yaml.safeLoad(fs.readFileSync('src/commands/waifu-overrides.yml'));
 
 const {
 	types: waifuTypes,
@@ -161,14 +162,12 @@ function exec(message, {user}) {
 	// The type of the waifu
 	let type = waifuTypes[Math.floor(userRNG() * waifuTypes.length)];
 
-	if (user.id === message.client.user.id) {
-		type = {
-			name: 'BEST WAIFU',
-			description:
-				'This is the best Waifu and there is absolutely no way any ' +
-				'other waifus could even get CLOSE to that one because of ' +
-				'how amazing she is'
-		};
+	if (user.id in overrides) {
+		type = overrides[user.id];
+
+		if (typeof type === 'number') {
+			type = waifuTypes[type];
+		}
 	}
 
 	// The scores, we need to calculate all of them first to then divide them with their total when added
