@@ -1,8 +1,8 @@
-const {URL, domainToUnicode} = require('url');
 const Discord = require('discord.js');
 
 const {matchURLs, matchEmojis, Link, Emoji} = requireUtil('parse-message');
 const nick = requireUtil('nick');
+const {domain} = requireUtil('url-utils');
 
 /**
  * Returns the content of a message handled by Akairo without the prefix and command
@@ -24,21 +24,6 @@ function getArgs(message) {
 		message.content.slice(startIndex).search(/\S/) + message.util.prefix.length;
 
 	return message.content.slice(argsIndex + message.util.alias.length + 1);
-}
-
-/**
- * Returns a "humanized" url, aka just the domain of the URL, also converts punnycode domains correctly
- * @param {string} url - The URL to humanize
- * @returns {string} The humanized URL
- */
-function humanizeURL(url) {
-	url = String(url);
-
-	try {
-		return domainToUnicode(new URL(url).hostname);
-	} catch (err) {
-		return url;
-	}
 }
 
 /**
@@ -84,13 +69,13 @@ const handler = {
 		return {
 			type: 'embed',
 			url,
-			name: humanizeURL(url)
+			name: domain(url)
 		};
 	},
 	link: link => ({
 		type: 'link',
 		url: link.url,
-		name: humanizeURL(link.url)
+		name: domain(link.url)
 	}),
 	emoji: emoji => {
 		let name = emoji.toString();
@@ -264,6 +249,5 @@ function resolveLink(...items) {
 }
 
 resolveLink.getArgs = getArgs;
-resolveLink.humanizeURL = humanizeURL;
 
 module.exports = resolveLink;
