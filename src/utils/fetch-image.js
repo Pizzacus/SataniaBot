@@ -43,6 +43,7 @@ const defaultOptions = {
 
 		// --- Site-specific properties ---
 		'.ProfileAvatar-container', // Twitter PFPs
+		'#comic > img', // XKCD
 		'.postContainer.opContainer .fileThumb' // 4chan threads
 	],
 	targetAttributes: ['content', 'href', 'src'],
