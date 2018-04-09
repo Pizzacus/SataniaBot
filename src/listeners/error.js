@@ -12,7 +12,7 @@ const options = {
 const userErrors = {
 	FetchError: {
 		'[prefix]': 'An error occured while fetching data',
-		'[default]': 'Unknown Error',
+		'[default]': err => err.message,
 
 		ENOTFOUND: 'This adress doesn\'t seem to exist',
 		EAI_AGAIN: 'A network error occured',

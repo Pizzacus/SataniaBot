@@ -129,8 +129,8 @@ const handler = {
 
 		const link = resolveLink(resolve);
 
-		if (link && link.type === 'user') {
-			link.name = nick(handler.source, message.channel);
+		if (link && link.type === 'user' && link.source instanceof Discord.User) {
+			link.name = nick(link.source, message.channel);
 		}
 
 		if (link && link.type === 'emoji') {
