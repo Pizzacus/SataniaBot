@@ -39,19 +39,6 @@ if (!fs.existsSync(dir)) {
 	});
 }
 
-client.once('ready', () => {
-	console.log('Ready!');
-
-	client.user.setPresence({
-		status: 'online',
-		afk: false,
-		game: {
-			name: `${client.commandHandler.prefix()}help | ${client.commandHandler.prefix()}invite`,
-			type: 0
-		}
-	});
-});
-
 client.login();
 
 require('./repl')(client);
