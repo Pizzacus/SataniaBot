@@ -16,8 +16,11 @@ function spawnShards() {
 	return manager.spawn();
 }
 
+let totalShardLaunched = 0;
+
 manager.on('launch', shard => {
-	console.log(`Launched shard ${shard.id + 1}/${manager.totalShards}`);
+	totalShardLaunched++;
+	console.log(`Launched Shard ${shard.id} (${totalShardLaunched}/${manager.totalShards})`);
 });
 
 manager.on('message', (shard, message) => {

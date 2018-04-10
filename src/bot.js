@@ -39,6 +39,8 @@ if (!fs.existsSync(dir)) {
 	});
 }
 
-client.login();
+client.login()
+	.then(() => console.log(`Shard ${client.shard.id} is ready!`))
+	.catch(console.error);
 
 require('./repl')(client);
