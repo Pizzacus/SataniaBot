@@ -14,6 +14,10 @@ const options = {
 };
 
 function exec(message, {text}) {
+	if (typeof text !== 'string' || text.length === 0) {
+		return message.reply('please specify something to say');
+	}
+
 	return message.channel.send(
 		text.replace(/<@[!&]?(\d+)>/g, (match, id) => {
 			const user = message.client.users.get(id);
