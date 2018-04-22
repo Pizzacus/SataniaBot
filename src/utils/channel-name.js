@@ -4,7 +4,7 @@ const nick = require('./nick');
 /**
  * Returns the displayed name of a channel
  * @param {Discord.Channel|Discord.User} channel The channel to get the name of
- * @returns {String} The displayed name of the channel
+ * @returns {string} The displayed name of the channel
  */
 function channelName(channel) {
 	if (channel instanceof Discord.User) {

@@ -4,7 +4,7 @@ const Discord = require('discord.js');
  * Gets the displayed name of a user in any channel
  * @param {Discord.User|Discord.GuildMember} user The user to get the displayed name of
  * @param {Discord.Channel} channel The channel where the name applies
- * @returns {String} The displayed name of the user
+ * @returns {string} The displayed name of the user
  */
 function nick(user, channel) {
 	if (!(channel instanceof Discord.Channel)) {

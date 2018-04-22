@@ -131,8 +131,8 @@ function getAllMatches(regexp, text) {
  * Parse user input containing length units and return them in a normalized
  * format of an array of [number, unit symbol]
  * @param {string} text User input
- * @param {Array<array<LengthUnit>>} unitSystems All supported unit systems
- * @returns {Array<array<number, string>>} An array of recognized units and values
+ * @param {Array<Array<LengthUnit>>} unitSystems All supported unit systems
+ * @returns {Array<Array<number, string>>} An array of recognized units and values
  */
 function parseUnits(text, unitSystems) {
 	const allUnits = unitSystems.reduce((units, system) => [...units, ...system]);

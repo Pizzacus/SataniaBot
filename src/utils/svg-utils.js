@@ -9,8 +9,8 @@ const cheerio = require('cheerio');
 
 /**
  * Check if a string or buffer is a valid SVG file
- * @param {Buffer|string} content - The string to check
- * @return {Boolean} A boolean which is true if the content is indeed an SVG image
+ * @param {Buffer|string} content The string to check
+ * @returns {boolean} A boolean which is true if the content is indeed an SVG image
  */
 function isSVG(content) {
 	const svg = cheerio.load(content, {
@@ -25,8 +25,8 @@ function isSVG(content) {
  *
  * If the content is not an SVG, it will return `undefined`
  *
- * @param {string|Buffer} content - The content to parse the size from
- * @returns {?Object} - The size of the SVG
+ * @param {string|Buffer} content The content to parse the size from
+ * @returns {?Object} The size of the SVG
  */
 function getSVGSize(content) {
 	const svg = cheerio.load(content, {

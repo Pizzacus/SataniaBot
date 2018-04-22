@@ -2,7 +2,30 @@
 	"extends": "xo",
 	"rules": {
 		"no-await-in-loop": ["off"],
-		"valid-jsdoc": ["error"]
+		"valid-jsdoc": [
+			"error",
+			{
+				"matchDescription": "^[^a-z]",
+				"preferType": {
+					"String": "string",
+					"Number": "number",
+					"Boolean": "boolean",
+					"Symbol": "symbol",
+					"object": "Object",
+					"function": "Function",
+					"array": "Array",
+					"date": "Date",
+					"error": "Error"
+				},
+				"prefer": {
+					"return": "returns",
+					"arg": "param",
+					"argument": "param",
+					"prop": "property",
+					"yield": "yields"
+				}
+			}
+		]
 	},
 	"globals": {
 		"requireUtil": false

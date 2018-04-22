@@ -211,10 +211,10 @@ function resolveLinkItem(item) {
 
 /**
  * @typedef {Object} ResolvedLink
- * @property {string} type - The type of item found
- * @property {string} url - The URL of the image
- * @property {*} [source] - Whatever object represents the source which was used to find the image, for instance, if this function resolves a mention, this property will be the corresponding user object
- * @property {string} name - The displayable name of the image, may contain Discord markdown and such
+ * @property {string} type The type of item found
+ * @property {string} url The URL of the image
+ * @property {*} [source] Whatever object represents the source which was used to find the image, for instance, if this function resolves a mention, this property will be the corresponding user object
+ * @property {string} name The displayable name of the image, may contain Discord markdown and such
  */
 
 /**
@@ -223,7 +223,7 @@ function resolveLinkItem(item) {
  * The main use for this function is to find the relevant image in a message.
  *
  * If multiple arguments are passed, the first one which can be resolved will be returned, if nothing can be resolved, 'null' will be returned
- * @param {...*} items - the items to resolve, usually just a Discord Message
+ * @param {...*} items the items to resolve, usually just a Discord Message
  * @returns {?ResolvedLink} The resolved image
  */
 function resolveLink(...items) {

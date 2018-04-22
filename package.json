@@ -36,13 +36,32 @@
 		"rules": {
 			"no-await-in-loop": 0,
 			"unicorn/no-process-exit": 0,
-			"valid-jsdoc": 2
+			"valid-jsdoc": [
+				"error",
+				{
+					"matchDescription": "^[^a-z]",
+					"preferType": {
+						"String": "string",
+						"Number": "number",
+						"Boolean": "boolean",
+						"Symbol": "symbol",
+						"object": "Object",
+						"function": "Function",
+						"array": "Array",
+						"date": "Date",
+						"error": "Error"
+					},
+					"prefer": {
+						"return": "returns",
+						"arg": "param",
+						"argument": "param",
+						"prop": "property",
+						"yield": "yields"
+					}
+				}
+			]
 		},
-		"globals": [
-			"requireUtil"
-		],
-		"ignores": [
-			"src/utils/emoji-regex.js"
-		]
+		"globals": ["requireUtil"],
+		"ignores": ["src/utils/emoji-regex.js"]
 	}
 }

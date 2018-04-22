@@ -68,7 +68,7 @@ class Link {
 
 /**
  * Matches Links in a string in the exact same way than Discord does
- * @param {string} content - The content to parse for Links
+ * @param {string} content The content to parse for Links
  * @returns {Link[]} The Links matched
  */
 function matchURLs(content) {
@@ -203,7 +203,7 @@ class Emoji {
 
 /**
  * Matches Emojis in a string, both custom and native.
- * @param {string} content - The content to parse for emojis
+ * @param {string} content The content to parse for emojis
  * @returns {Emoji[]} The emojis matched
  */
 function matchEmojis(content) {

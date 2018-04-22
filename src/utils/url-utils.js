@@ -26,7 +26,7 @@ function handleURL(url, withPath) {
 
 /**
  * Return the domain of an URL, also converts punnycode domains correctly
- * @param {string} url - The URL to humanize
+ * @param {string} url The URL to humanize
  * @returns {string} The humanized URL
  * @example
  * domain('https://www.google.com/page/'); // -> 'google.com'
@@ -37,7 +37,7 @@ function domain(url) {
 
 /**
  * Return the domain of an URL with the path, also converts punnycode domains correctly
- * @param {string} url - The URL to humanize
+ * @param {string} url The URL to humanize
  * @returns {string} The humanized URL
  * @example
  * domain('https://www.google.com/page/'); // -> 'google.com/page'
