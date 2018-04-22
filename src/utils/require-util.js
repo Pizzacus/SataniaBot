@@ -7,7 +7,7 @@ const pathUtil = require('path');
  *
  * @param {string} path The module to require in `./src/utils/`
  * @global
- * @returns {*}
+ * @returns {*} The required module
  */
 function requireUtil(path) {
 	return require(pathUtil.resolve('src/utils', path));

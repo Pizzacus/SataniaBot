@@ -104,7 +104,7 @@ function numberModifier(x) {
  * Split a text every N characters, always splitting at a space
  * @param {string} str The text to split
  * @param {number} length The maximal length of every chunk
- * @returns {string[]}
+ * @returns {string[]} The splitted text
  */
 function splitText(str, length) {
 	const lines = str.split(/\n\r?|\r\n?/);
@@ -137,7 +137,7 @@ function splitText(str, length) {
  * @param {number} value Progression between 0 and 1
  * @param {number} size Size of the bar
  * @param {string[]} [chars] The characters to use, the lower the index the lower the progression
- * @returns {string}
+ * @returns {string} The progression bar
  */
 function bar(value, size, chars = [' ', '▌', '█']) {
 	let barString = '';

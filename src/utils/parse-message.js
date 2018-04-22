@@ -190,7 +190,7 @@ class Emoji {
 
 	/**
 	 * Returns a textual representation of the emoji for use in messages
-	 * @returns {string}
+	 * @returns {string} The textual representation of the emoji
 	 */
 	toString() {
 		if (this.custom) {

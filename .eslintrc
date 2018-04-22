@@ -1,7 +1,8 @@
 {
 	"extends": "xo",
 	"rules": {
-		"no-await-in-loop": ["off"]
+		"no-await-in-loop": ["off"],
+		"valid-jsdoc": ["error"]
 	},
 	"globals": {
 		"requireUtil": false

@@ -22,7 +22,7 @@ const options = {
  * Converts roman numbers to actual numbers
  * Return NaN if not a valid roman number
  * @param {string} str The number to convert
- * @returns {number}
+ * @returns {number} The converted number
  */
 function roman(str) {
 	let result = 0;
@@ -51,7 +51,7 @@ function roman(str) {
  * And removing non latin, numeral or spaces characters
  * Except if it detects it shouldn't
  * @param {string} string The string to normalize
- * @return The normalized string
+ * @returns {string} The normalized string
  */
 function normalizeQuery(string) {
 	let normalized = String(string).toLowerCase().replace(/[\s\-_]+/g, ' ');
@@ -111,6 +111,7 @@ function resultScore(result, query) {
  * Find the most common game type for a game name in a guild
  * @param {string} gameName The game name to find the common type of
  * @param {Discord.Guild} guild The guild to search in
+ * @returns {number} The number representing the most common game type
  */
 function findGameType(gameName, guild) {
 	const types = {};
@@ -131,10 +132,10 @@ function findGameType(gameName, guild) {
 }
 
 /**
- * Sorts a collection where the keys are ID and the values are presences
+ * Categorizes a collection where the keys are ID and the values are presences
  * Into another collection where the keys are the game name and the values are arrays of IDs
- * @param {Discord.Collection<Snowflake, Discord.Presence>} games
- * @returns {Discord.Collection<string, Snowflake[]}
+ * @param {Map<Snowflake, Discord.Presence>} presences The collection to cathegorize
+ * @returns {Discord.Collection<string, Snowflake[]>} The categorized collection
  */
 function listGames(presences) {
 	const games = new Discord.Collection();

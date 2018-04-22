@@ -3,8 +3,8 @@ const yaml = require('js-yaml');
 
 /**
  * Converts a string to camelcase
- * @param {string} string
- * @returns {string}
+ * @param {string} string The string to convert to camelcase
+ * @returns {string} the converted string
  */
 function camelCase(string) {
 	return string.replace(/(?:-|_)([a-z])/g, match => match[1].toUpperCase());
@@ -15,9 +15,10 @@ function camelCase(string) {
  * It will also transform the keys of objects in the object.
  * It does understand recursion and will process objects in arrays too.
  * @param {Object} obj The object to turn into camelcase
+ * @param {WeakMap} _seen The object which have already been processed, this argument is optional and private
  * @returns {Object} Another object where all the keys are camelCase
  */
-function camelCaseKeys(obj, seen = new WeakMap()) {
+function camelCaseKeys(obj, _seen = new WeakMap()) {
 	const isObject = x =>
 		typeof x === 'object' &&
 		x !== null &&
@@ -31,19 +32,19 @@ function camelCaseKeys(obj, seen = new WeakMap()) {
 
 	const target = {};
 
-	if (seen.has(obj)) {
-		return seen.get(obj);
+	if (_seen.has(obj)) {
+		return _seen.get(obj);
 	}
 
-	seen.set(obj, target);
+	_seen.set(obj, target);
 
 	for (const key of Object.keys(obj)) {
 		let value = obj[key];
 
 		if (Array.isArray(value)) {
-			value = value.map(elem => camelCaseKeys(elem, seen));
+			value = value.map(elem => camelCaseKeys(elem, _seen));
 		} else if (isObject(value)) {
-			value = camelCaseKeys(value, seen);
+			value = camelCaseKeys(value, _seen);
 		}
 
 		target[camelCase(key)] = value;

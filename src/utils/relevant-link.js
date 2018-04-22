@@ -6,7 +6,7 @@ const {domain} = requireUtil('url-utils');
 
 /**
  * Returns the content of a message handled by Akairo without the prefix and command
- * @param {Akairo.MessageExtensions} message
+ * @param {Akairo.MessageExtensions} message The message to get the content from
  * @returns {string} The content of the message
  */
 function getArgs(message) {
@@ -29,6 +29,7 @@ function getArgs(message) {
 /**
  * Normalize a sring to look for the guild name in
  * @param {string} str The string to normalize
+ * @returns {string} The normalized string
  */
 function normalize(str) {
 	return str.toLowerCase().normalize();

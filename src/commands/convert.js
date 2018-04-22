@@ -19,7 +19,7 @@ const options = {
  * A length unit used for unit conversion
  * @typedef {object} LengthUnit
  * @property {string} symbol The symbol of a unit
- * @property {array<string>} names User-friendly names of the unit
+ * @property {Array<string>} names User-friendly names of the unit
  * @property {number} multiplier The multiplier relative to the base unit (which
  *  has this property set to 1)
  */
@@ -97,8 +97,8 @@ const metricUnits = [
 /**
  * Convert a user-friendly name of a unit to the unit's symbol, eg.
  * "meters" -> "m", "meter" -> "m", "m" -> "m"
- * @param {array<LengthUnit>} units An array of units to look up
- * @param {string} text A string to be matched
+ * @param {Array<LengthUnit>} units An array of units to look up
+ * @param {string} unitName A string to be matched
  * @returns {?string} The unit's symbol or null
  */
 function getUnitSymbol(units, unitName) {
@@ -114,7 +114,7 @@ function getUnitSymbol(units, unitName) {
  * the global flag can match multiple values in a single string)
  * @param {RegExp} regexp A RegExp to match the string against
  * @param {string} text A string to be matched
- * @returns {array} An array containing all results of RegExp#exec
+ * @returns {Array} An array containing all results of RegExp#exec
  */
 function getAllMatches(regexp, text) {
 	const results = [];
@@ -131,8 +131,8 @@ function getAllMatches(regexp, text) {
  * Parse user input containing length units and return them in a normalized
  * format of an array of [number, unit symbol]
  * @param {string} text User input
- * @param {array<array<LengthUnit>>} unitSystems All supported unit systems
- * @returns {array<array<number, string>>} An array of recognized units and values
+ * @param {Array<array<LengthUnit>>} unitSystems All supported unit systems
+ * @returns {Array<array<number, string>>} An array of recognized units and values
  */
 function parseUnits(text, unitSystems) {
 	const allUnits = unitSystems.reduce((units, system) => [...units, ...system]);
@@ -154,7 +154,7 @@ function parseUnits(text, unitSystems) {
 /**
  * Convert a number in a base unit to a user-friendly (approximated) form,
  * eg. 20000 m -> 20 kilometers
- * @param {array<LengthUnit>} units An array with possible units
+ * @param {Array<LengthUnit>} units An array with possible units
  * @param {number} value The value in the base unit
  * @returns {string} A user-friendly representation of the value
  */

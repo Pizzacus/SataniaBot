@@ -70,10 +70,11 @@ function getSVGSize(content) {
  *
  * The results of this function can be passed to sharp directly
  *
- * @param {Buffer|string} svg - The SVG image to use
- * @param {Number} width - The target Width the SVG image will be rendered in
- * @param {Number} height - The target Height the SVG image will be rendered in
- * @param {Number} [baseDensity=72] - The base dnesity to use, defaults to 72 which is usually the correct value
+ * @param {Buffer|string} svg The SVG image to use
+ * @param {number} width The target Width the SVG image will be rendered in
+ * @param {number} height The target Height the SVG image will be rendered in
+ * @param {number} [baseDensity=72] The base dnesity to use, defaults to 72 which is usually the correct value
+ * @returns {?number} The optimal density or undefined if non-applicable
  */
 function optimalDensity(svg, width, height, baseDensity = 72) {
 	const size = getSVGSize(svg);

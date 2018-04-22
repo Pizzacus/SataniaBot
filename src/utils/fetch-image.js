@@ -14,7 +14,7 @@ const defaultOptions = {
 	maxFetch: 4,
 	targetQueries: [
 		// Custom meta tag in case anyone needs it to make Satania use another pic
-		// I do agree this is very useless and people can do it based on th User-Agent
+		// I do agree this is very useless and people can do it based on the User-Agent
 		// But hey, you never know
 		'meta[name="sataniabot_image" i]',
 		'meta[property="sataniabot_image" i]',
@@ -75,7 +75,7 @@ class FetchImageError extends Error {
  * parse the page if it gets HTML to attempt extracting an image from it
  * @param {...string} url The URLs to fetch an image from, first URL which is successfully fetched is returned
  * @param {Options} [options] The options for the request
- * @returns {Promise<Buffer>}
+ * @returns {Promise<Buffer>} The fetched image
  * @throws If no image are found or if the request is unsuccessful, if multiple images are passed, the first error is returned
  */
 async function fetchImage(...urls) {
@@ -116,8 +116,9 @@ async function fetchImage(...urls) {
  * Actually fetch the images recursively, this function is called by fetchImage,
  * fetchimage only revolves options and performs certain checks,
  * this one actually fetches the images
- * @param {string[]} urls
- * @param {Options} options
+ * @param {string[]} urls The URLs to fetch an image from, first URL which is successfully fetched is returned
+ * @param {Options} options The options for the request
+ * @returns {Promise<Buffer>} The fetched image
  */
 async function actuallyFetchImages(urls, options) {
 	let firstError;
@@ -205,9 +206,10 @@ async function fetchSingleImage(url, options) {
 /**
  * Attempts to find the image URLs from an HTML buffer
  * @param {buffer} body The HTML buffer to find images in
- * @param {string} url The URL to use as base for relative links
- * @param {Options} options
+ * @param {string} baseUrl The URL to use as base for relative links
+ * @param {Options} options The options for the request
  * @yields {string} The URLs found
+ * @returns {IterableIterator<string>} The URLs found
  */
 function * findImages(body, baseUrl, options) {
 	let $;

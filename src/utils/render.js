@@ -2,8 +2,30 @@ const sharp = require('sharp');
 const {optimalDensity} = require('./svg-utils');
 
 /**
+ * @typedef {Object} ImageOptions
+ * @property {Promise<string|Buffer>|Buffer|string} image The image to be used to render.
+ * If this is a promise, it will be correctly awaited while the other images will start being processed right away
+ * @property {object} [options={}] The options passed to Sharp
+ * @property {number} [width] The width of the image in pixels, if undefined the image won't be resized
+ * @property {number} [height] The height of the image in pixels, if undefined the image won't be resized
+ * @property {number} [x=0] The position of the image on the X axis
+ * @property {number} [y=0] The position of the image on the Y axis
+ * @property {string} [resize='crop'] The method to use when resizing, accepted values are `'crop'`, `'embed'`, `'max'`, `'min'` and `'ignoreAspectRatio'`
+ * @property {string} [crop='centre'] The type of crop if the resize mode is set to "crop", see this: http://sharp.dimens.io/en/stable/api-resize/#crop
+ * @property {boolean} [withoutEnlargement=false] If resizing the image in a way that it would be enlarged is allowed
+ * @property {boolean} [background] The background used, check Sharp.background http://sharp.dimens.io/en/stable/api-colour/#background for more informations
+ */
+
+/**
+ * An image to generate
+ * @typedef {ImageOptions|string|Buffer} Image
+ */
+
+/**
  * Can be used on the .then method of a Sharp promise to make it return an object representing the image in the rendering queue
  * @param {*} extraOptions All the keys in this object will be added to the returned object, use this to pass x and y values
+ * @private
+ * @returns {Object} the queuable data
  * @example
  * 	sharp('image.jpg')
  * 		.raw()
@@ -32,8 +54,16 @@ function queueData(extraOptions) {
 /**
  * Processes a single layer of the render() function
  * @param {Image} options The image to process
+ * @private
+ * @returns {Promise<Sharp>} The processed image
  */
 async function processImage(options) {
+	if (typeof options === 'string' || Buffer.isBuffer(options)) {
+		options = {
+			image: options
+		};
+	}
+
 	const awaited = await options.image;
 	const sharpOptions = options.options || {};
 
@@ -91,6 +121,7 @@ async function processImage(options) {
  * of the bounds of the first one.
  * @param {Sharp} a The first image in the back
  * @param {Sharp} b The overlayed image on the front
+ * @returns {Sharp} The result of the operation
  */
 function composeImages(a, b) {
 	// Sharp cannot overlay two images if one goes out of the bounds of the other
@@ -124,25 +155,9 @@ function composeImages(a, b) {
 }
 
 /**
- * An image to generate
- * @typedef {Object} Image
- * @property {Promise<string|Buffer>|Buffer|string} image - The image to be used to render.
- * If this is a promise, it will be correctly awaited while the other images will start being processed right away
- * @property {object} [options={}] - The options passed to Sharp
- * @property {number} [width] - The width of the image in pixels, if undefined the image won't be resized
- * @property {number} [height] - The height of the image in pixels, if undefined the image won't be resized
- * @property {number} [x=0] - The position of the image on the X axis
- * @property {number} [y=0] - The position of the image on the Y axis
- * @property {string} [resize='crop'] - The method to use when resizing, accepted values are `'crop'`, `'embed'`, `'max'`, `'min'` and `'ignoreAspectRatio'`
- * @property {string} [crop='centre'] - The type of crop if the resize mode is set to "crop", see this: http://sharp.dimens.io/en/stable/api-resize/#crop
- * @property {boolean} [withoutEnlargement=false] - If resizing the image in a way that it would be enlarged is allowed
- * @property {boolean} [background] - The background used, check Sharp.background http://sharp.dimens.io/en/stable/api-colour/#background for more informations
- */
-
-/**
- * A function allowing simple render of basic images
+ * A function allowing simple render of basic images, with great performances
  * @module render
- * @param {...Image} images - The different layers which will be overlayed
+ * @param {...Image} images The different layers which will be overlayed
  * @example
  * 	const render = requireUtil('render');
  *	const image = await render({
@@ -157,7 +172,7 @@ function composeImages(a, b) {
  *	}, {
  *		image: './assets/pat-overlay.png'
  *	});
- * @returns {Promise<Sharp>} - A Promise resolving to a Sharp instance, containing the image
+ * @returns {Promise<Sharp>} A Promise resolving to a Sharp instance, containing the image
  */
 function render(...images) {
 	return new Promise((resolve, reject) => {
