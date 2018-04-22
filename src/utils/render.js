@@ -203,4 +203,16 @@ function render(...images) {
 	});
 }
 
+/**
+ * Renders a random image from the arguments (only there for convienence)
+ * @param {...Image[]} images Arrays of layers to be overlayed, a random argument will be picked
+ * @returns {Promise<Sharp>} A Promise resolving to a Sharp instance, containing the image
+ */
+function random(...images) {
+	const pick = Math.floor(Math.random() * images.length);
+
+	return render(...images[pick]);
+}
+
 module.exports = render;
+module.exports.random = random;
