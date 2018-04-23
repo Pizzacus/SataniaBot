@@ -7,7 +7,7 @@ const fetch = require('make-fetch-happen').defaults(fetchDefaults);
 
 const options = {
 	aliases: ['joke', 'jokes', 'dadjoke'],
-	description: 'Get a random joke, pretty generic comand'
+	description: 'Get a random joke, pretty generic command'
 };
 
 function getJoke() {
