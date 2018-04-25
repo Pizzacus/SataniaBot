@@ -13,9 +13,15 @@ const cheerio = require('cheerio');
  * @returns {boolean} A boolean which is true if the content is indeed an SVG image
  */
 function isSVG(content) {
-	const svg = cheerio.load(content, {
-		xmlMode: true
-	});
+	let svg;
+
+	try {
+		svg = cheerio.load(content, {
+			xmlMode: true
+		});
+	} catch (err) {
+		return;
+	}
 
 	return svg(':root').is('svg');
 }
@@ -29,9 +35,16 @@ function isSVG(content) {
  * @returns {?Object} The size of the SVG
  */
 function getSVGSize(content) {
-	const svg = cheerio.load(content, {
-		xmlMode: true
-	});
+	let svg;
+
+	try {
+		svg = cheerio.load(content, {
+			xmlMode: true
+		});
+	} catch (err) {
+		return;
+	}
+
 	const root = svg(':root');
 
 	if (!root.is('svg')) {
