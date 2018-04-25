@@ -3,7 +3,7 @@
 # The keys are Discord IDs, the values are the number of the type they get in
 #  the waifu type array in waifu-const.yml
 #
-# You can also set an entirely new faifu type  by setting it to an object
+# You can also set an entirely new waifu type by setting it to an object
 #  with a "name" and "description"  key
 
 '328098137522700292':
@@ -13,3 +13,4 @@
     even get CLOSE to that one because of how amazing she is
 
 '315307154187747349': 28
+'145682910542823424': 28
