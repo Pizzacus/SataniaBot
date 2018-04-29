@@ -238,44 +238,65 @@ function * findImages(body, baseUrl, options) {
 	const elements = [];
 
 	for (const query of options.targetQueries) {
-		elements.push(...$(query).get());
+		elements.push(
+			...$(query)
+				.get()
+				.map(elem => $(elem))
+		);
 	}
 
+	for (let url of processElements(elements, options.targetProcessors)) {
+		try {
+			url = new URL(url, baseUrl);
+			yield url.href;
+		} catch (err) {}
+	}
+}
+
+/**
+ * Called by findImages, processes a bunch of elements
+ * @param {CheerioElements[]} elements The elements to process
+ * @param {Object<string, string|string[]|Function>} processors The processors to use
+ * @param {Options} options The options for the request
+ * @yields {string} The URLs found
+ * @returns {IterableIterator<string>} The URLs found
+ */
+function * processElements(elements, processors) {
 	for (const elem of elements) {
 		// Finds the key that correspond to the element being processed
-		const processorKey = Object.keys(options.targetProcessors).find(key =>
-			$(elem).is(key)
+		const processorKey = Object.keys(processors).find(key =>
+			elem.is(key)
 		);
 
 		if (!processorKey) {
-			console.warn(`findImages: Unable to process ${elem.name} element`);
+			console.warn(`findImages: Unable to process ${elem.get().name} element`);
 			continue;
 		}
 
-		let processor = options.targetProcessors[processorKey];
+		let processor = processors[processorKey];
 		let urls;
 
 		// Determine what to do with the processor based on its type
 		if (typeof processor === 'function') {
-			urls = processor($(elem));
+			urls = processor(elem);
 		} else {
 			if (!Array.isArray(processor)) {
 				processor = [processor];
 			}
 
-			const attr = processor.find(attr => attr in elem.attribs);
-			urls = elem.attribs[attr];
+			// Finds an attribute in the processor that the element has
+			const attr = processor.find(attr => elem.attr(attr));
+			urls = elem.attr(attr);
 		}
 
 		if (!Array.isArray(urls)) {
 			urls = [urls];
 		}
 
-		for (let url of urls) {
-			try {
-				url = new URL(url, baseUrl);
-				yield url.href;
-			} catch (err) {}
+		for (const url of urls) {
+			if (url) {
+				yield url;
+			}
 		}
 	}
 }
