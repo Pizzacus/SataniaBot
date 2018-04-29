@@ -38,6 +38,11 @@ const defaultOptions = {
 		// https://stackoverflow.com/questions/19274463/what-is-link-rel-image-src
 		'link[rel="image_src" i]',
 
+		// https://getstarted.sailthru.com/site/personalization-engine/meta-tags/
+		'meta[name="sailthru.image.full"]',
+		'meta[name="sailthru.image.thumb"]',
+		'meta[name="sailthru.image"]',
+
 		// Websites with nothing but an image
 		'body > img:only-child',
 
@@ -46,7 +51,17 @@ const defaultOptions = {
 		'#comic > img', // XKCD
 		'.postContainer.opContainer .fileThumb' // 4chan threads
 	],
-	targetAttributes: ['content', 'href', 'src'],
+	/**
+	 * Rules to process the elements found by targetQueries
+	 * Can be a string or array to match certain attributes
+	 * Or a function which gets the element as argument and should return an array of URLs or null
+	 */
+	targetProcessors: {
+		meta: 'content',
+		a: 'href',
+		link: 'href',
+		img: 'src'
+	},
 	expectImage: false
 };
 
@@ -220,20 +235,47 @@ function * findImages(body, baseUrl, options) {
 		return;
 	}
 
+	const elements = [];
+
 	for (const query of options.targetQueries) {
-		const elements = $(query).get();
+		elements.push(...$(query).get());
+	}
 
-		for (const elem of elements) {
-			const attr = options.targetAttributes.find(attr => attr in elem.attribs);
+	for (const elem of elements) {
+		// Finds the key that correspond to the element being processed
+		const processorKey = Object.keys(options.targetProcessors).find(key =>
+			$(elem).is(key)
+		);
 
-			if (attr) {
-				let url;
+		if (!processorKey) {
+			console.warn(`findImages: Unable to process ${elem.name} element`);
+			continue;
+		}
 
-				try {
-					url = new URL(elem.attribs[attr], baseUrl);
-					yield url.href;
-				} catch (err) {}
+		let processor = options.targetProcessors[processorKey];
+		let urls;
+
+		// Determine what to do with the processor based on its type
+		if (typeof processor === 'function') {
+			urls = processor($(elem));
+		} else {
+			if (!Array.isArray(processor)) {
+				processor = [processor];
 			}
+
+			const attr = processor.find(attr => attr in elem.attribs);
+			urls = elem.attribs[attr];
+		}
+
+		if (!Array.isArray(urls)) {
+			urls = [urls];
+		}
+
+		for (let url of urls) {
+			try {
+				url = new URL(url, baseUrl);
+				yield url.href;
+			} catch (err) {}
 		}
 	}
 }
