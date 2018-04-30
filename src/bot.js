@@ -11,7 +11,7 @@ sharp.concurrency(config.sharpConcurency);
 const client = new AkairoClient({
 	ownerID: config.owner,
 	prefix: config.prefix,
-	handleEdits: true,
+	handleEdits: false,
 	commandUtil: true,
 	commandUtilLifetime: 600000,
 	fetchMembers: true,
