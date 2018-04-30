@@ -215,7 +215,8 @@ function exec(message, args) {
 			// A special case to use the feet'inches" format when the number is
 			// between 1 and 15 feet
 			if (inches <= 180 && inches >= 12) {
-				output = `${Math.floor(inches / 12)}'${Math.round(inches) % 12}"`;
+				const rounded = Math.round(inches);
+				output = `${Math.floor(rounded / 12)}'${rounded % 12}"`;
 			} else {
 				output = prefixUnit(displayedUnits, inches);
 			}
