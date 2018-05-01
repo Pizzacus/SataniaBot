@@ -112,8 +112,9 @@ const handler = {
 
 		resolve.push(message.embeds);
 
-		// ^^^^ keyword
-		if (/^\^+$/.test(content)) {
+		// ^^^^ keyword, it is pretty important to trim the content,
+		// as the regex would report a match on a string that is only spaces
+		if (/^[\^＾˄ˆᶺ⌃\s]+$/.test(content.trim())) {
 			const resolvedMessage = [...message.channel.messages.values()]
 				.reverse()
 				.find(message => {
