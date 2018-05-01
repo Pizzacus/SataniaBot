@@ -88,9 +88,7 @@ fetch('https://api.github.com/repos/twitter/twemoji/contents/2')
 // Just run 'script/generate-emoji-regex' to update this file
 
 module.exports = () => {
-	return /${
-		set.toString('u')
-	}/gu;
+	return /${set.toString('u')}/gu;
 };
 `;
 

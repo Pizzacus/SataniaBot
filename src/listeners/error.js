@@ -52,19 +52,17 @@ const userErrors = {
 };
 
 function findErrorMessage(err, messages) {
-	const has = requireUtil('has-attr');
-
 	const errName = err.code || err.type || err.name || err.message;
 	const errClass = err.constructor.name;
 	let classMessage;
 
-	if (has(messages, errClass) && typeof messages[errClass] === 'object') {
+	if (errClass in messages && typeof messages[errClass] === 'object') {
 		classMessage = findErrorMessage(err, messages[errClass]);
 	}
 
 	let prefix;
 
-	if (has(messages, '[prefix]')) {
+	if ('[prefix]' in messages) {
 		prefix = `**${messages['[prefix]']}**: `;
 	} else {
 		prefix = '';
@@ -72,9 +70,9 @@ function findErrorMessage(err, messages) {
 
 	let errDetails;
 
-	if (has(messages, errName)) {
+	if (errName in messages) {
 		errDetails = messages[errName];
-	} else if (has(messages, '[default]')) {
+	} else if ('[default]' in messages) {
 		errDetails = messages['[default]'];
 		console.error('An error was not present in the message object:');
 		console.error(err);

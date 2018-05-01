@@ -10,12 +10,13 @@ async function exec(message) {
 		return message.reply('link is `null` or evaluates to false');
 	}
 
-	return message.reply(`
+	return message.reply(
+		`
 **Name**: ${link.name}
 **Type**: ${link.type}
 **Source**: \`${link.source}\`
 **URL**: <${link.url}>
-`,
+		`.trim(),
 		{
 			files: [await fetchImage(link.url)]
 		}

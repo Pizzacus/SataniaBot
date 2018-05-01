@@ -2,6 +2,7 @@
 	"extends": "xo",
 	"rules": {
 		"no-await-in-loop": ["off"],
+		"prefer-destructuring": ["off"],
 		"valid-jsdoc": [
 			"error",
 			{

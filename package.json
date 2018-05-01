@@ -36,6 +36,7 @@
 		"rules": {
 			"no-await-in-loop": 0,
 			"unicorn/no-process-exit": 0,
+			"prefer-destructuring": 0,
 			"valid-jsdoc": [
 				"error",
 				{

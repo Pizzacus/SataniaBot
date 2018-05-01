@@ -27,7 +27,7 @@ module.exports = client => {
 
 	const console = new Console(stream);
 
-	Object.defineProperty(global, 'console', {
+	Reflect.defineProperty(global, 'console', {
 		get() {
 			return console;
 		},
