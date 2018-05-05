@@ -17,7 +17,7 @@
 		"make-fetch-happen": "^4.0.1",
 		"seedrandom": "^2.4.3",
 		"sharp": "^0.20.1",
-		"simple-markdown": "^0.4.0"
+		"simple-markdown": "Khan/simple-markdown#22acae6de29d5a5f0c8209ce3a6af21579c5b90d"
 	},
 	"optionalDependencies": {
 		"erlpack": "discordapp/erlpack",
@@ -62,7 +62,11 @@
 				}
 			]
 		},
-		"globals": ["requireUtil"],
-		"ignores": ["src/utils/emoji-regex.js"]
+		"globals": [
+			"requireUtil"
+		],
+		"ignores": [
+			"src/utils/emoji-regex.js"
+		]
 	}
 }
