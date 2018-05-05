@@ -90,6 +90,9 @@ fetch('https://api.github.com/repos/twitter/twemoji/contents/2')
 module.exports = () => {
 	return /${set.toString('u')}/gu;
 };
+
+module.exports.noGlobalFlag = /${set.toString('u')}/u;
+
 `;
 
 		return writeFile('./src/utils/emoji-regex.js', content);
