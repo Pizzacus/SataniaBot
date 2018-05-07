@@ -161,7 +161,7 @@ function parseUnits(text, unitSystems) {
 function prefixUnit(units, value) {
 	const unit = units.reduce(
 		(chosenUnit, currentUnit) =>
-			currentUnit.multiplier <= value ? currentUnit : chosenUnit
+			currentUnit.multiplier <= Math.abs(value) ? currentUnit : chosenUnit
 	);
 	const length = value / unit.multiplier;
 
