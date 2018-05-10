@@ -4,6 +4,7 @@ const sharp = require('sharp');
 const fetchImage = requireUtil('fetch-image');
 const relevantLink = requireUtil('relevant-link');
 const nick = requireUtil('nick');
+const {optimalDensity} = requireUtil('svg-utils');
 
 const TRIANGLE_SIZE_RATIO = 50;
 const IMAGE_MARGIN = 0.25;
@@ -23,8 +24,8 @@ const options = {
 		'__**Examples:**__ `s!disintegrate`, `s!disintegrate @Example#1234`, `s!disintegrate :CustomEmoji:`, `s!disintegrate` with a file attached'
 };
 
-async function exec(message) {
-	const link = relevantLink(message);
+async function exec(message, {user}) {
+	const link = relevantLink(message, user);
 
 	if (!link) {
 		return message.reply(
@@ -37,7 +38,9 @@ async function exec(message) {
 	const image = await fetchImage(link.url);
 
 	// Allows us to get infos about the image and normalize the size and format
-	return sharp(image)
+	return sharp(image, {
+		density: optimalDensity(image, 300, 300)
+	})
 		.resize(300, 300)
 		.max()
 		.png()
