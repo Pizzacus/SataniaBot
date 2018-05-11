@@ -162,6 +162,7 @@ async function exec(message, {user}) {
 			svg += '</svg>';
 
 			return sharp(Buffer.from(svg))
+				.trim()
 				.png()
 				.toBuffer();
 		})
