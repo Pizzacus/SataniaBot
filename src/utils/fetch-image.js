@@ -174,7 +174,7 @@ async function fetchSingleImage(url, options) {
 	}
 
 	const accepts = requireUtil('get-supported-formats')();
-	accepts.push('image/*;q=0.8', 'text/html;q=0.5', '*/*;q=0.1');
+	accepts.push('image/*;q=0.8', '*/*;q=0.1');
 
 	const res = await fetch(url, {
 		...options.fetchOptions,
