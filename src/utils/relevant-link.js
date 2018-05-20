@@ -43,30 +43,19 @@ function normalize(str) {
  * @returns {number} -1 if a < b, 0 if a == b and 1 if a > b
  */
 function compareIDs(a, b) {
-	if (typeof a === 'object' && typeof a.id !== 'undefined') {
-		a = a.id;
+	a = typeof a === 'object' ? a.id : a;
+	b = typeof b === 'object' ? b.id : b;
+
+	if (
+		typeof a === 'string' &&
+		typeof b === 'string' &&
+		a.length !== b.length
+	) {
+		return a.length < b.length ? -1 : 1;
 	}
 
-	if (typeof b === 'object' && typeof b.id !== 'undefined') {
-		b = b.id;
-	}
-
-	if (typeof a === 'string' && typeof b === 'string') {
-		if (a.length < b.length) {
-			return -1;
-		}
-
-		if (a.length > b.length) {
-			return 1;
-		}
-	}
-
-	if (a < b) {
-		return -1;
-	}
-
-	if (a > b) {
-		return 1;
+	if (a !== b) {
+		return a < b ? -1 : 1;
 	}
 
 	return 0;
