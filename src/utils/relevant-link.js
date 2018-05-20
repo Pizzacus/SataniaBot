@@ -3,6 +3,7 @@ const Discord = require('discord.js');
 const {matchURLs, matchEmojis, Link, Emoji} = requireUtil('parse-message');
 const nick = requireUtil('nick');
 const {domain} = requireUtil('url-utils');
+const channelName = requireUtil('channel-name');
 
 /**
  * Returns the content of a message handled by Akairo without the prefix and command
@@ -10,11 +11,11 @@ const {domain} = requireUtil('url-utils');
  * @returns {string} The content of the message
  */
 function getArgs(message) {
-	if (!message.util) {
-		return;
-	}
-
-	if (!message.util.prefix || !message.util.alias) {
+	if (
+		message.util == null ||
+		message.util.prefix == null ||
+		message.util.alias == null
+	) {
 		return message.content;
 	}
 
@@ -33,6 +34,77 @@ function getArgs(message) {
  */
 function normalize(str) {
 	return str.toLowerCase().normalize();
+}
+
+/**
+ * Compares two Discord IDs (you can't compare big number strings easily)
+ * @param {string|number} a The ID to compare against b
+ * @param {string|number} b The ID to compare against a
+ * @returns {number} -1 if a < b, 0 if a == b and 1 if a > b
+ */
+function compareIDs(a, b) {
+	if (typeof a === 'object' && typeof a.id !== 'undefined') {
+		a = a.id;
+	}
+
+	if (typeof b === 'object' && typeof b.id !== 'undefined') {
+		b = b.id;
+	}
+
+	if (typeof a === 'string' && typeof b === 'string') {
+		if (a.length < b.length) {
+			return -1;
+		}
+
+		if (a.length > b.length) {
+			return 1;
+		}
+	}
+
+	if (a < b) {
+		return -1;
+	}
+
+	if (a > b) {
+		return 1;
+	}
+
+	return 0;
+}
+
+/**
+ * Checks if the message contains an image
+ * @param {Discord.Message} message The message to check for images
+ * @returns {boolean} If the message contained an image
+ */
+function hasImage(message) {
+	return (
+		message.embeds.some(
+			embed =>
+				embed.image != null ||
+				embed.thumbnail != null
+		) ||
+		message.attachments.some(
+			attachment =>
+				attachment.height != null ||
+				attachment.width != null
+		)
+	);
+}
+
+function lastImage(channel, findAll) {
+	const messages = [...channel.messages.values()];
+
+	messages.sort(compareIDs);
+	messages.reverse();
+
+	const imageMessages = messages.filter(hasImage);
+
+	if (findAll) {
+		return imageMessages;
+	}
+
+	return imageMessages[0];
 }
 
 const handler = {
@@ -91,6 +163,11 @@ const handler = {
 			name
 		};
 	},
+	channel: channel => ({
+		type: 'channel',
+		url: channelName.icon(channel),
+		name: channelName(channel)
+	}),
 	message: message => {
 		const content = getArgs(message);
 
@@ -101,13 +178,19 @@ const handler = {
 			matchEmojis(content)
 		];
 
+		const channelContainerName = message.guild instanceof Discord.Guild ?
+			message.guild.name :
+			channelName(message.channel);
+
 		if (
-			message.guild && (
-				content.search(Discord.MessageMentions.EVERYONE_PATTERN) >= 0 ||
-				normalize(content).includes(normalize(message.guild.name))
-			)
+			content.search(Discord.MessageMentions.EVERYONE_PATTERN) >= 0 ||
+			normalize(content).includes(normalize(channelContainerName))
 		) {
-			resolve.push(message.guild);
+			if (message.guild == null) {
+				resolve.push(message.channel);
+			} else {
+				resolve.push(message.guild);
+			}
 		}
 
 		resolve.push(message.embeds);
@@ -115,18 +198,8 @@ const handler = {
 		// ^^^^ keyword, it is pretty important to trim the content,
 		// as the regex would report a match on a string that is only spaces
 		if (/^[\^＾˄ˆᶺ⌃\s]+$/.test(content.trim())) {
-			const resolvedMessage = [...message.channel.messages.values()]
-				.reverse()
-				.find(message => {
-					return (
-						message.embeds.some(embed => embed.image || embed.thumbnail) ||
-						message.attachments.size > 0
-					);
-				});
-
-			if (resolvedMessage) {
-				resolve.push(resolvedMessage.attachments, resolvedMessage.embeds);
-			}
+			const lastMessage = lastImage(message.channel);
+			resolve.push(lastMessage.attachments, lastMessage.embeds);
 		}
 
 		const link = resolveLink(resolve);
@@ -150,7 +223,7 @@ const handler = {
 function resolveLinkItem(item) {
 	let link = {};
 
-	if (item === null || item === undefined) {
+	if (item == null) {
 		return null;
 	}
 
@@ -183,6 +256,12 @@ function resolveLinkItem(item) {
 			link = handler.message(item);
 			break;
 
+		case Discord.TextChannel:
+		case Discord.GroupDMChannel:
+		case Discord.DMChannel:
+			link = handler.channel(item);
+			break;
+
 		case Link:
 			link = handler.link(item);
 			break;
@@ -194,7 +273,7 @@ function resolveLinkItem(item) {
 		default:
 	}
 
-	if (!link || !link.url) {
+	if (link == null || link.url == null) {
 		return null;
 	}
 
@@ -250,6 +329,6 @@ function resolveLink(...items) {
 	return null;
 }
 
-resolveLink.getArgs = getArgs;
-
 module.exports = resolveLink;
+module.exports.getArgs = getArgs;
+module.exports.lastImage = lastImage;
