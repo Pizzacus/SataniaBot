@@ -42,4 +42,23 @@ function channelName(channel) {
 	}
 }
 
+function channelIcon(channel) {
+	switch (channel.type) {
+		case 'dm':
+			return channel.recipient.displayAvatarURL;
+
+		case 'group':
+			return channel.iconURL;
+
+		case 'text':
+		case 'voice':
+		case 'category':
+			return channel.guild.iconURL;
+
+		default:
+			throw new TypeError('Unknown channel type');
+	}
+}
+
 module.exports = channelName;
+module.exports.icon = channelIcon;
