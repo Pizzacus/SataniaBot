@@ -26,7 +26,15 @@
 					"yield": "yields"
 				}
 			}
-		]
+		],
+		"eqeqeq": [
+			"error",
+			"always",
+			{
+				"null": "ignore"
+			}
+		],
+		"no-eq-null": ["off"]
 	},
 	"globals": {
 		"requireUtil": false
