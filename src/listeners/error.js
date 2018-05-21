@@ -36,7 +36,7 @@ const userErrors = {
 	},
 	FetchImageError: {
 		'[prefix]': 'An error occured while fetching the image',
-		'[default]': 'Unknown Error',
+		'[default]': err => err.message,
 
 		'not-ok': err => `The server returned an **error ${err.status}**`,
 		'no-images': 'No images were found on that page',
@@ -48,7 +48,8 @@ const userErrors = {
 	EAI_AGAIN: 'A network error occured',
 	ECONNRESET: 'A network error occured',
 	ETIMEDOUT: 'A network error occured',
-	render: 'The image cannot be processed, it may be invalid or of an unsupported format!'
+	render: err =>
+		`The image cannot be processed, it may be invalid or of an unsupported format (${err.message})`
 };
 
 function findErrorMessage(err, messages) {
