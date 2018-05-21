@@ -148,7 +148,7 @@ const options = {
 			const lastMessage = relevantLink.lastImage(message.channel);
 
 			if (lastMessage) {
-				return relevantLink(lastMessage.attachments, lastMessage.embeds);
+				return [lastMessage.attachments, lastMessage.embeds];
 			}
 		}
 	}],
