@@ -182,6 +182,10 @@ class Emoji {
 	 */
 	get url() {
 		if (this.custom) {
+			if (this.animated) {
+				return `https://cdn.discordapp.com/emojis/${this.id}.gif`;
+			}
+
 			return `https://cdn.discordapp.com/emojis/${this.id}.png`;
 		}
 

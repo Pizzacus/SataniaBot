@@ -104,9 +104,7 @@ const handler = {
 	}),
 	user: user => ({
 		type: 'user',
-		url: user.avatar ?
-			`https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.webp` :
-			user.defaultAvatarURL,
+		url: user.displayAvatarURL,
 		name: user.username
 	}),
 	member: member => ({
