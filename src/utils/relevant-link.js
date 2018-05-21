@@ -121,17 +121,20 @@ const handler = {
 	}),
 	embed: embed => {
 		let url = null;
+		let name = null;
 
 		if (embed.image) {
-			url = embed.image.url;
+			url = embed.image.proxyURL;
+			name = domain(embed.image.url);
 		} else if (embed.thumbnail) {
-			url = embed.thumbnail.url;
+			url = embed.thumbnail.proxyURL;
+			name = domain(embed.thumbnail.url);
 		}
 
 		return {
 			type: 'embed',
 			url,
-			name: domain(url)
+			name
 		};
 	},
 	link: link => ({
@@ -188,7 +191,10 @@ const handler = {
 		// as the regex would report a match on a string that is only spaces
 		if (/^[\^＾˄ˆᶺ⌃\s]+$/.test(content.trim())) {
 			const lastMessage = lastImage(message.channel);
-			resolve.push(lastMessage.attachments, lastMessage.embeds);
+
+			if (lastMessage) {
+				resolve.push(lastMessage.attachments, lastMessage.embeds);
+			}
 		}
 
 		const link = resolveLink(resolve);
