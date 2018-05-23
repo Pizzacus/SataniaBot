@@ -6,7 +6,7 @@ const render = requireUtil('render');
 const nick = requireUtil('nick');
 
 const options = {
-	aliases: ['hug', 'hugs'],
+	aliases: ['hug', 'hugs', 'cuddle'],
 	args: [{
 		id: 'user',
 		type: 'relevant',
