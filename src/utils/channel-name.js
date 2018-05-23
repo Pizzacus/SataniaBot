@@ -48,7 +48,10 @@ function channelIcon(channel) {
 			return channel.recipient.displayAvatarURL;
 
 		case 'group':
-			return channel.iconURL;
+			return (
+				channel.iconURL ||
+				'https://discordapp.com/assets/f046e2247d730629309457e902d5c5b3.svg'
+			);
 
 		case 'text':
 		case 'voice':
