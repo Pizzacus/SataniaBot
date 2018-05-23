@@ -96,6 +96,9 @@ function lastImage(channel, findAll) {
 	return imageMessages[0];
 }
 
+/**
+ * @type {Object<string, function<ResolvedLink>}
+ */
 const handler = {
 	guild: guild => ({
 		type: 'guild',
@@ -104,7 +107,12 @@ const handler = {
 	}),
 	user: user => ({
 		type: 'user',
-		url: user.displayAvatarURL,
+		url: user.avatar ?
+			`https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.webp` :
+			user.defaultAvatarURL,
+		animatedURL: user.avatar.startsWith('a_') ?
+			`https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.gif` :
+			null,
 		name: user.username
 	}),
 	member: member => ({
@@ -149,7 +157,10 @@ const handler = {
 
 		return {
 			type: 'emoji',
-			url: emoji.url,
+			url: emoji.staticURL,
+			animatedURL: emoji.animated ?
+				emoji.url :
+				null,
 			name
 		};
 	},
@@ -270,6 +281,10 @@ function resolveLinkItem(item) {
 		return null;
 	}
 
+	if (!('animatedURL' in link)) {
+		link.animatedURL = null;
+	}
+
 	if (typeof link.name === 'string') {
 		// Adds an invisible "Word-Joiner" inside mentions
 		// To be 100% sure the bot can't be manipulated into pinging people
@@ -285,7 +300,8 @@ function resolveLinkItem(item) {
 /**
  * @typedef {Object} ResolvedLink
  * @property {string} type The type of item found
- * @property {string} url The URL of the image
+ * @property {string} url The URL of the image, static if possible
+ * @property {?string} animatedURL The URL to the animated version of the image, null if there is none
  * @property {*} [source] Whatever object represents the source which was used to find the image, for instance, if this function resolves a mention, this property will be the corresponding user object
  * @property {string} name The displayable name of the image, may contain Discord markdown and such
  */

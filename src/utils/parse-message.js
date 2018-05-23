@@ -177,15 +177,27 @@ class Emoji {
 	 *
 	 * Native Emojis lead to a SVG image on twemoji.maxcdn.com.
 	 *
-	 * Custom Emojis lead to a PNG image on cdn.discordapp.com.
+	 * Custom Emojis lead to a PNG or GIF image on cdn.discordapp.com.
 	 * @type {string}
 	 */
 	get url() {
-		if (this.custom) {
-			if (this.animated) {
-				return `https://cdn.discordapp.com/emojis/${this.id}.gif`;
-			}
+		if (this.custom && this.animated) {
+			return `https://cdn.discordapp.com/emojis/${this.id}.gif`;
+		}
 
+		return this.staticURL;
+	}
+
+	/**
+	 * The URL to the custom emoji, **static only**.
+	 *
+	 * Native Emojis lead to a SVG image on twemoji.maxcdn.com.
+	 *
+	 * Custom Emojis lead to a PNG image on cdn.discordapp.com.
+	 * @type {string}
+	 */
+	get staticURL() {
+		if (this.custom) {
 			return `https://cdn.discordapp.com/emojis/${this.id}.png`;
 		}
 

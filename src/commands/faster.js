@@ -166,7 +166,7 @@ async function exec(message, args) {
 
 	await message.channel.startTyping();
 
-	const image = await fetchImage(link.url);
+	const image = await fetchImage(link.animatedURL || link.url);
 
 	let spedup;
 
