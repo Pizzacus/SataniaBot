@@ -4,9 +4,10 @@ const Discord = require('discord.js');
  * Gets the displayed name of a user in any channel
  * @param {Discord.User|Discord.GuildMember} user The user to get the displayed name of
  * @param {Discord.Channel} channel The channel where the name applies
+ * @param {boolean} [withHash=false] If the discriminator should be included at the end
  * @returns {string} The displayed name of the user
  */
-function nick(user, channel) {
+function nick(user, channel, withHash = false) {
 	if (!(channel instanceof Discord.Channel)) {
 		throw new TypeError(
 			'Argument \'channel\' must be an instance of a Discord Channel'
@@ -42,7 +43,7 @@ function nick(user, channel) {
 		name = channel.guild.members.get(user.id).displayName;
 	}
 
-	return name;
+	return name + (withHash ? '#' + user.discriminator : '');
 }
 
 module.exports = nick;

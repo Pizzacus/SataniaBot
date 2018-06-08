@@ -26,7 +26,13 @@ async function exec(message, args) {
 
 		let duelers = [message.author, args.user];
 
-		let duel = await message.channel.send(`**${nick(duelers[0], channel)}** and **${nick(duelers[1], channel)}** start a duel...`);
+		let withHash = false;
+
+		if (nick(duelers[0], channel) === nick(duelers[1], channel)) {
+			withHash = true;
+		}
+
+		let duel = await message.channel.send(`**${nick(duelers[0], channel, withHash)}** and **${nick(duelers[1], channel, withHash)}** start a duel...`);
 
 		await sleep(1250);
 
@@ -45,7 +51,7 @@ async function exec(message, args) {
 		winstreak[winner.id] = winstreak[winner.id] + 1 || 1;
 		winstreak[loser.id] = 0;
 
-		duel = await duel.edit(duel.content + `\n\n**${nick(winner, channel)} won the duel** and killed **${nick(loser, channel)}**!`);
+		duel = await duel.edit(duel.content + `\n\n**${nick(winner, channel, withHash)} won the duel** and killed **${nick(loser, channel, withHash)}**!`);
 		await sleep(1500);
 
 		await duel.edit(duel.content + ` \`Winstreak: ${winstreak[winner.id]}\``);
