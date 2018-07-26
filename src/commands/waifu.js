@@ -4,6 +4,7 @@ const seedrandom = require('seedrandom');
 const yaml = require('js-yaml');
 
 const nick = requireUtil('nick');
+const fixEmbed = requireUtil('fix-embed');
 
 const constants = yaml.safeLoad(fs.readFileSync('src/commands/waifu-const.yml'));
 const overrides = yaml.safeLoad(fs.readFileSync('src/commands/waifu-overrides.yml'));
@@ -194,7 +195,7 @@ function exec(message, {user}) {
 			.join('\n');
 
 	return message.channel.send({
-		embed: {
+		embed: fixEmbed({
 			title: `Waifu Type: __${type.name}__`,
 			description,
 			author: {
@@ -207,7 +208,7 @@ function exec(message, {user}) {
 					value: infos
 				}
 			]
-		}
+		})
 	});
 }
 

@@ -4,6 +4,7 @@ const seedrandom = require('seedrandom');
 const yaml = require('js-yaml');
 
 const nick = requireUtil('nick');
+const fixEmbed = requireUtil('fix-embed');
 
 let overrides = {};
 
@@ -92,7 +93,7 @@ function exec(message, args) {
 	}
 
 	return message.channel.send({
-		embed: {
+		embed: fixEmbed({
 			title: `Rating: __${rating}__`,
 			author: {
 				name: `Gay ratings for ${nick(user, message.channel)}`,
@@ -102,15 +103,15 @@ function exec(message, args) {
 				{
 					name: '  Orientation:',
 					value: `\`${bar(orientation, 24)}\`      **Straight:** ${percent(straight)}\n` +
-						`◂ Straight                      Gay ▸             **Gay:** ${percent(gay)}\n` +
-						`                                                      **Asexuality:** ${percent(1 - activity)}`
+						`◂ Straight                    Gay ▸            **Gay:** ${percent(gay)}\n` +
+						`                                                 **Asexuality:** ${percent(1 - activity)}`
 				},
 				{
 					name: 'Sexual Activity:',
-					value: `\`${bar(activity, 24)}\`\n◂ Low                           High ▸`
+					value: `\`${bar(activity, 24)}\`\n◂ Low                         High ▸`
 				}
 			]
-		}
+		})
 	});
 }
 

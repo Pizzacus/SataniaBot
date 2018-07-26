@@ -1,8 +1,7 @@
 # Spaces added to make them align well in Discord
-# \u2009 is a thin space
 ratings:
-  - "     \u2009Cuteness"
-  - "    \u2009Lewdness"
+  - "     Cuteness"
+  - "    Lewdness"
   - "Friendliness"
   - " Intelligence"
 
