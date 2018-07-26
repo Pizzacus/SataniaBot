@@ -42,7 +42,7 @@ const infoMethods = {
 				Math.floor(heightImperial / 12) + '\'' +
 				Math.floor(heightImperial % 12) + '"';
 
-			return `        **Height**: ${displayImperial} / ${displayMetric}`;
+			return `        **Height**: ${displayMetric} / ${displayImperial}`;
 		}
 
 		function weight() {
