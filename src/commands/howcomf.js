@@ -6,14 +6,14 @@ const nick = requireUtil('nick');
 const fixEmbed = requireUtil('fix-embed');
 
 const options = {
-	aliases: ['comf', 'comfy', 'howcomf', 'howcomfy'],
+	aliases: ['comfy', 'comf', 'howcomf', 'howcomfy'],
 	args: [{
 		id: 'user',
 		type: 'relevant',
 		match: 'content',
 		default: message => message.author
 	}],
-	description: 'Check how gay someone is! If you don\'t mention anyone, the bot will give **your** results\n__**Examples:**__: `s!gay @Example#1234`, `s!gay`'
+	description: 'Check your comfiness for tomorrow! If you don\'t mention anyone, the bot will give **your** results\n__**Examples:**__: `s!comfy @Example#1234`, `s!comfy`'
 };
 
 function getComfy(id) {
