@@ -17,12 +17,12 @@ const options = {
 };
 
 function getComfy(id) {
-	function pythonComfy(seed) {
+	function pythonComfy(seed, tryAlt = false) {
 		if (typeof seed !== 'number' && typeof seed !== 'string') {
 			throw new TypeError('Seed must be a String or a Number');
 		}
 
-		const child = childProcess.spawnSync('python', [
+		const child = childProcess.spawnSync(tryAlt ? 'python3' : 'python', [
 			'-c',
 			[
 				'import random, sys',
@@ -34,6 +34,8 @@ function getComfy(id) {
 		if (child.error) {
 			if (child.error.code !== 'ENOENT') {
 				console.error(child.error);
+			} else if (!tryAlt) {
+				return pythonComfy(seed, true);
 			}
 
 			return null;
