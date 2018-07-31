@@ -1,9 +1,23 @@
-const childProcess = require('child_process');
+const {URL} = require('url');
 const {Command} = require('discord-akairo');
-const seedrandom = require('seedrandom');
+const fetch = require('make-fetch-happen').defaults(
+	requireUtil('fetch-defaults')
+);
 
 const nick = requireUtil('nick');
 const fixEmbed = requireUtil('fix-embed');
+
+const RATING_ARRAY = [
+	'MEGA COMFY',
+	'EXTREMELY Comfy',
+	'VERY Comfy',
+	'Pretty Comfy',
+	'Comfy',
+	'A Little Comfy',
+	'Not Very Comfy...',
+	'Not Comfy...',
+	'N O   C O M F Y'
+].reverse();
 
 const options = {
 	aliases: ['comfy', 'comf', 'howcomf', 'howcomfy'],
@@ -16,53 +30,66 @@ const options = {
 	description: 'Check your comfiness for tomorrow! If you don\'t mention anyone, the bot will give **your** results\n__**Examples:**__: `s!comfy @Example#1234`, `s!comfy`'
 };
 
-function getComfy(id) {
-	function pythonComfy(seed, tryAlt = false) {
-		if (typeof seed !== 'number' && typeof seed !== 'string') {
-			throw new TypeError('Seed must be a String or a Number');
-		}
+/**
+ * @typedef {Object} Comfy
+ * @description A comfiness value associated to a certain ID and relevant for a certain date
+ * @property {string} id The identifier associated to the comfiness value
+ * @property {Date} date The date for which the comfiness value is relevant
+ * @property {number} comfvalue The amount of comfiness which will occur for the user represented by the ID on the specified date
+ */
 
-		const child = childProcess.spawnSync(tryAlt ? 'python3' : 'python', [
-			'-c',
-			[
-				'import random, sys',
-				`random.seed(${JSON.stringify(String(seed))})`,
-				'sys.stdout.write(str(random.randrange(1001) / 10))'
-			].join('\n')
-		]);
+/**
+ * Grabs the comfiness value from Seb's universal comfiness forecasting API
+ * @param {string} id Some sort of identifier representing the user, can be any unique value related to them
+ * @param {string|number|Date} [date='tomorrow'] The date to check, supports anything that can be parsed by JavaScript's Date objects, or keywords recognized by the API
+ * @returns {Comfy} The comfiness value
+ */
+function getComfy(id, date = 'tomorrow') {
+	const url = new URL('http://api.sebg.moe/comf/');
 
-		if (child.error) {
-			if (child.error.code !== 'ENOENT') {
-				console.error(child.error);
-			} else if (!tryAlt) {
-				return pythonComfy(seed, true);
+	if (date == null) {
+		date = new Date();
+	}
+
+	const parsedDate = Date.parse(date);
+
+	if (isNaN(parsedDate)) {
+		date = String(date);
+	} else {
+		const dateboy = new Date(parsedDate);
+		date = [
+			dateboy.getFullYear(),
+			dateboy.getMonth() + 1,
+			dateboy.getDate()
+		].join('-');
+	}
+
+	url.searchParams.set('id', id);
+	url.searchParams.set('date', date);
+
+	return fetch(url)
+		.then(res => {
+			if (res.status < 200 && res.status >= 400) {
+				const err = new fetch.FetchError(
+					'Status was not ok, it was ' + res.status,
+					'not-ok'
+				);
+				err.status = res.status;
+
+				throw err;
 			}
 
-			return null;
-		}
+			return res.json();
+		})
+		.then(body => {
+			const result = {
+				id,
+				comfvalue: Number(body.comfvalue),
+				date: new Date(body.date.Y, body.date.M - 1, body.date.D)
+			};
 
-		return parseFloat(child.stdout.toString().trim());
-	}
-
-	function javascriptComfy(seed) {
-		const rng = seedrandom(seed);
-		return Math.floor(rng() * 1001) / 10;
-	}
-
-	const now = new Date();
-	const seed = id + [
-		now.getFullYear(),
-		(now.getMonth() + 1).toString().padStart(2, '0'),
-		now.getDate().toString().padStart(2, '0')
-	].join('-');
-
-	const pycomf = pythonComfy(seed);
-
-	if (!Number.isFinite(pycomf)) {
-		return javascriptComfy();
-	}
-
-	return pycomf;
+			return result;
+		});
 }
 
 /**
@@ -89,24 +116,12 @@ function bar(value, size, chars = [' ', '▌', '█']) {
 	return barString;
 }
 
-function exec(message, args) {
+async function exec(message, args) {
 	const user = args.user;
 
-	const comfy = getComfy(user.id);
+	const comfy = await getComfy(user.id);
 
-	const ratingArray = [
-		'MEGA COMFY',
-		'EXTREMELY Comfy',
-		'VERY Comfy',
-		'Pretty Comfy',
-		'Comfy',
-		'A Little Comfy',
-		'Not Very Comfy...',
-		'Not Comfy...',
-		'N O   C O M F Y'
-	].reverse();
-
-	const rating = ratingArray[Math.floor((comfy / 100) * ratingArray.length)];
+	const rating = RATING_ARRAY[Math.floor((comfy.comfvalue / 1000) * RATING_ARRAY.length)];
 
 	return message.channel.send({
 		embed: fixEmbed({
@@ -117,15 +132,13 @@ function exec(message, args) {
 			title: 'Your predicted comfiness for tomorrow is:',
 			fields: [
 				{
-					name: `**__${rating}__**   (${comfy} %)`,
-					value: `\`[${bar(comfy / 100, 24)}]\``
+					name: `**__${rating}__**   (${comfy.comfvalue / 10} %)`,
+					value: `\`[${bar(comfy.comfvalue / 1000, 24)}]\``
 				}
 			],
 			footer: {
 				text: `Prediction for ${
-					new Date(
-						Date.now() + (1000 * 60 * 60 * 24)
-					).toLocaleDateString('en', {
+					comfy.date.toLocaleDateString('en', {
 						year: 'numeric',
 						month: 'long',
 						day: 'numeric'
