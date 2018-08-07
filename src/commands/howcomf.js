@@ -135,7 +135,7 @@ async function exec(message, args) {
 			title: 'Your predicted comfiness for tomorrow is:',
 			fields: [
 				{
-					name: `**__${rating}__**   (${comfy.comfvalue / MAX_COMFY * 100} %)`,
+					name: `**__${rating}__**   (${(comfy.comfvalue / MAX_COMFY * 100).toFixed(1)} %)`,
 					value: `\`[${bar(comfy.comfvalue / MAX_COMFY, 24)}]\``
 				}
 			],
