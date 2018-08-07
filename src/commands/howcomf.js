@@ -19,6 +19,9 @@ const RATING_ARRAY = [
 	'N O   C O M F Y'
 ].reverse();
 
+// Max amount of comfiness obtainable
+const MAX_COMFY = 1000;
+
 const options = {
 	aliases: ['comfy', 'comf', 'howcomf', 'howcomfy'],
 	args: [{
@@ -121,7 +124,7 @@ async function exec(message, args) {
 
 	const comfy = await getComfy(user.id);
 
-	const rating = RATING_ARRAY[Math.floor((comfy.comfvalue / 1000) * RATING_ARRAY.length)];
+	const rating = RATING_ARRAY[Math.floor((comfy.comfvalue / (MAX_COMFY + 1)) * RATING_ARRAY.length)];
 
 	return message.channel.send({
 		embed: fixEmbed({
@@ -132,8 +135,8 @@ async function exec(message, args) {
 			title: 'Your predicted comfiness for tomorrow is:',
 			fields: [
 				{
-					name: `**__${rating}__**   (${comfy.comfvalue / 10} %)`,
-					value: `\`[${bar(comfy.comfvalue / 1000, 24)}]\``
+					name: `**__${rating}__**   (${comfy.comfvalue / MAX_COMFY * 100} %)`,
+					value: `\`[${bar(comfy.comfvalue / MAX_COMFY, 24)}]\``
 				}
 			],
 			footer: {
