@@ -4,47 +4,58 @@ const fetch = require('make-fetch-happen').defaults(
 );
 const cheerio = require('cheerio');
 const fileType = require('file-type');
+const tough = require('tough-cookie');
 
 const {isSVG} = requireUtil('svg-utils');
 const formats = requireUtil('get-supported-formats')();
+
+function meta(name) {
+	return `meta[name="${name}" i], meta[property="${name}"]`;
+}
 
 const defaultOptions = {
 	fetchOptions: {},
 	imageMime: formats,
 	maxFetch: 4,
 	targetQueries: [
-		// Custom meta tag in case anyone needs it to make Satania use another pic
-		// I do agree this is very useless and people can do it based on the User-Agent
-		// But hey, you never know
-		'meta[name="sataniabot_image" i]',
-		'meta[property="sataniabot_image" i]',
+		// --- Website Overrides ---
+		// For websites that do provide valid image metadata
+		// ...but we still want to use something else
+		'.cool-work .cool-work-main .img-container img', // Pixiv SFW
+		'.cool-work .cool-work-main .sensored img', // Pixiv NSFW... Yes they really spelt it that way
 
+		// --- General Rules ---
 		// https://developer.twitter.com/en/docs/tweets/optimize-with-cards/overview/summary-card-with-large-image
-		'meta[name="twitter:image" i]',
-		'meta[property="twitter:image" i]',
+		meta('twitter:image'),
 
 		// https://ogp.me/
-		'meta[property="og:image:secure_url" i]',
-		'meta[name="og:image:secure_url" i]',
-		'meta[property="og:image:url" i]',
-		'meta[name="og:image:url" i]',
-		'meta[property="og:image" i]',
-		'meta[name="og:image" i]',
+		meta('og:image:secure_url'),
+		meta('og:image:url'),
+		meta('og:image'),
+
+		// http://open.weibo.com/wiki/Weibo_meta_tag
+		meta('weibo:image:full_image'),
+		meta('weibo:image:image'),
+		meta('weibo:webpage:image'),
+		meta('weibo:article:image'),
+		meta('weibo:audio:image'),
+		meta('weibo:video:image'),
+		meta('weibo:person:image'),
+		meta('weibo:product:full_image'),
+		meta('weibo:product:image'),
+		meta('weibo:game:full_image'),
+		meta('weibo:game:image'),
 
 		// https://support.google.com/customsearch/answer/1626955?hl=en
-		'meta[name="thumbnail" i]',
-		'meta[property="thumbnail" i]',
+		meta('thumbnail'),
 
 		// https://stackoverflow.com/questions/19274463/what-is-link-rel-image-src
 		'link[rel="image_src" i]',
 
 		// https://getstarted.sailthru.com/site/personalization-engine/meta-tags/
-		'meta[name="sailthru.image.full"]',
-		'meta[name="sailthru.image.thumb"]',
-		'meta[name="sailthru.image"]',
-
-		// Websites with nothing but an image
-		'body > img:only-child',
+		meta('sailthru.image.full'),
+		meta('sailthru.image.thumb'),
+		meta('sailthru.image'),
 
 		// --- Site-specific properties ---
 		'.ProfileAvatar-container', // Twitter PFPs
@@ -120,6 +131,10 @@ async function fetchImage(...urls) {
 		options = {...defaultOptions};
 	}
 
+	if (!options.cookieJar) {
+		options.cookieJar = new tough.CookieJar();
+	}
+
 	if (!urls.every(elem => typeof elem === 'string')) {
 		throw new TypeError('All URLs must be strings');
 	}
@@ -173,18 +188,40 @@ async function fetchSingleImage(url, options) {
 		options.maxFetch--;
 	}
 
-	const accepts = requireUtil('get-supported-formats')();
-	accepts.push('image/*;q=0.8', '*/*;q=0.1');
+	let accepts = requireUtil('get-supported-formats')();
+
+	const hostname = (new URL(url)).hostname;
+
+	if (hostname.endsWith('pixiv.net')) {
+		// TODO: To correctly scrape Pixiv we currently have a hardcoded exception
+		// Because we must get the HTML version to get the image without the watermark
+		// It would be nice if this could not be hardcoded like that
+		accepts = ['text/html'];
+	} else if (hostname === 'i.pximg.net') {
+		url = url.replace(/^https?:\/\/i.pximg.net\/c\/\d+x\d+/, 'https://i.pximg.net');
+		url = url.replace(/_square1200.jpg$/, '_master1200.jpg');
+	} else {
+		accepts.push('image/*;q=0.8', '*/*;q=0.1');
+	}
 
 	const res = await fetch(url, {
 		...options.fetchOptions,
 		headers: {
 			...options.fetchOptions.headers,
-			Accept: accepts.join(', ')
+			Accept: accepts.join(', '),
+			Cookie: options.cookieJar.getCookieStringSync(url),
+			Referer: options.referer
 		}
 	});
 
-	if (!res.status >= 200 && res.status < 400) {
+	try {
+		options.cookieJar.setCookieSync(res.headers.get('set-cookie'), url);
+	} catch (err) {
+		// Cookies can throw for all sort of reasons so we dont need to really handle it
+		/// console.log(err);
+	}
+
+	if (res.status < 200 || res.status >= 400) {
 		const err = new FetchImageError(
 			'The server returned an Error ' + res.status,
 			'not-ok'
@@ -215,7 +252,10 @@ async function fetchSingleImage(url, options) {
 	}
 
 	const links = [...findImages(body, url, options)];
-	return fetchImage(...links, options);
+	return fetchImage(...links, {
+		...options,
+		referer: url
+	});
 }
 
 /**
