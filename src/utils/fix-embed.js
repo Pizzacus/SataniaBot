@@ -5,8 +5,6 @@ function fixField(field) {
 			.replace(/ /g, '\u2005'); // FOUR-PER-EM space, looks identical to a space, but doesn't collapse!
 	}
 
-	console.log(field);
-
 	return field;
 }
 

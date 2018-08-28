@@ -10,6 +10,7 @@ const {optimalDensity} = require('./svg-utils');
  * @property {number} [height] The height of the image in pixels, if undefined the image won't be resized
  * @property {number} [x=0] The position of the image on the X axis
  * @property {number} [y=0] The position of the image on the Y axis
+ * @property {number} [rotate=0] The angle of rotation (only multiples of 90° are supported)
  * @property {string} [resize='crop'] The method to use when resizing, accepted values are `'crop'`, `'embed'`, `'max'`, `'min'` and `'ignoreAspectRatio'`
  * @property {string} [crop='centre'] The type of crop if the resize mode is set to "crop", see this: http://sharp.dimens.io/en/stable/api-resize/#crop
  * @property {boolean} [withoutEnlargement=false] If resizing the image in a way that it would be enlarged is allowed
@@ -100,6 +101,10 @@ async function processImage(options) {
 
 	if ('background' in options) {
 		image.background(options.background).flatten();
+	}
+
+	if ('rotate' in options) {
+		image.rotate(options.rotate);
 	}
 
 	const output = await image
