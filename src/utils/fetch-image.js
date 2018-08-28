@@ -57,6 +57,9 @@ const defaultOptions = {
 		meta('sailthru.image.thumb'),
 		meta('sailthru.image'),
 
+		// Websites with nothing but an image
+		'body > img:only-child',
+
 		// --- Site-specific properties ---
 		'.ProfileAvatar-container', // Twitter PFPs
 		'#comic > img', // XKCD
