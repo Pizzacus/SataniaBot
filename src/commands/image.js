@@ -1,5 +1,7 @@
 const {Command} = require('discord-akairo');
+const fileType = require('file-type');
 
+const {isSVG} = requireUtil('svg-utils');
 const fetchImage = requireUtil('fetch-image');
 const relevantLink = requireUtil('relevant-link');
 
@@ -10,6 +12,15 @@ async function exec(message) {
 		return message.reply('link is `null` or evaluates to false');
 	}
 
+	const file = await fetchImage(link.url);
+	let ext = fileType(file);
+
+	if (ext) {
+		ext = ext.mime;
+	} else if (isSVG(file)) {
+		ext = 'svg';
+	}
+
 	return message.reply(
 		`
 **Name**: ${link.name}
@@ -18,7 +29,10 @@ async function exec(message) {
 **URL**: <${link.url}>
 		`.trim(),
 		{
-			files: [await fetchImage(link.url)]
+			files: [{
+				name: `image.${ext}`,
+				attachment: file
+			}]
 		}
 	);
 }
