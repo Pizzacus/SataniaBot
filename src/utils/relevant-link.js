@@ -110,7 +110,7 @@ const handler = {
 		url: user.avatar ?
 			`https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.webp` :
 			user.defaultAvatarURL,
-		animatedURL: user.avatar.startsWith('a_') ?
+		animatedURL: (typeof user.avatar === 'string' && user.avatar.startsWith('a_')) ?
 			`https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.gif` :
 			null,
 		name: user.username
