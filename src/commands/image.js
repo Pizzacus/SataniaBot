@@ -16,7 +16,7 @@ async function exec(message) {
 	let ext = fileType(file);
 
 	if (ext) {
-		ext = ext.mime;
+		ext = ext.ext;
 	} else if (isSVG(file)) {
 		ext = 'svg';
 	}
