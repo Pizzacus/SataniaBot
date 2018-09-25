@@ -1,3 +1,11 @@
+const suppressPrompt = (replServer, defaultEval) => (...args) => {
+	const prompt = replServer._prompt;
+	replServer.setPrompt('');
+	defaultEval(...args);
+	replServer.setPrompt(prompt);
+	replServer.displayPrompt(true);
+};
+
 module.exports = client => {
 	const repl = require('repl');
 	const {Transform} = require('stream');
@@ -8,6 +16,7 @@ module.exports = client => {
 		useGlobal: true
 	});
 
+	replserver.eval = suppressPrompt(replserver, replserver.eval);
 	replserver.context.client = client;
 	replserver.context.replserver = replserver;
 
