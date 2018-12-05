@@ -43,7 +43,7 @@ function nick(user, channel, withHash = false) {
 		name = channel.guild.members.get(user.id).displayName;
 	}
 
-	return name + (withHash ? '#' + user.discriminator : '');
+	return name.replace(/<(@[!&]?\d+)>/g, '<\u2060$1>') + (withHash ? '#' + user.discriminator : '');
 }
 
 module.exports = nick;
