@@ -1,3 +1,8 @@
+const repl = require('repl');
+const {Transform} = require('stream');
+
+const {Console} = console;
+
 const suppressPrompt = (replServer, defaultEval) => (...args) => {
 	const prompt = replServer._prompt;
 	replServer.setPrompt('');
@@ -7,13 +12,9 @@ const suppressPrompt = (replServer, defaultEval) => (...args) => {
 };
 
 module.exports = client => {
-	const repl = require('repl');
-	const {Transform} = require('stream');
-	const {Console} = require('console');
-
 	const replserver = repl.start({
 		prompt: '> ',
-		useGlobal: true
+		useGlobal: false
 	});
 
 	replserver.eval = suppressPrompt(replserver, replserver.eval);
@@ -34,11 +35,11 @@ module.exports = client => {
 
 	const stream = new REPLStream();
 
-	const console = new Console(stream);
+	const newconsole = new Console(stream);
 
 	Reflect.defineProperty(global, 'console', {
 		get() {
-			return console;
+			return newconsole;
 		},
 		enumerable: true,
 		configurable: true
