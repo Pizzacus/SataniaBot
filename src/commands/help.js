@@ -16,6 +16,7 @@ async function exec(message) {
 				if (command.description) {
 					embed.addField(user.client.commandHandler.prefix(message) + command.id, command.description);
 				}
+
 				return null;
 			});
 

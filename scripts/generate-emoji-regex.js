@@ -13,15 +13,15 @@ let Trie;
 
 try {
 	Trie = require('regexgen').Trie;
-} catch (err) {
-	if (err.code === 'MODULE_NOT_FOUND') {
+} catch (error) {
+	if (error.code === 'MODULE_NOT_FOUND') {
 		console.error(
 			'\nThe module \'regexgen\' could not be found\n' +
 			'It is part of the Dev Dependancies, please install those to run this script\n'
 		);
 	}
 
-	throw err;
+	throw error;
 }
 
 /**

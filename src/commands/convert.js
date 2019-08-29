@@ -206,6 +206,7 @@ function exec(message, args) {
 
 			break;
 		}
+
 		case metricUnits: {
 			const inches = sum / inch;
 			const displayedUnits = imperialUnits.filter(unit =>
@@ -223,6 +224,7 @@ function exec(message, args) {
 
 			break;
 		}
+
 		default: {
 			output = 'impossible';
 		}

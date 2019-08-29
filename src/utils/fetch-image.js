@@ -167,9 +167,9 @@ async function actuallyFetchImages(urls, options) {
 			if (image) {
 				return image;
 			}
-		} catch (err) {
+		} catch (error) {
 			if (!firstError) {
-				firstError = err;
+				firstError = error;
 			}
 		}
 	}
@@ -219,9 +219,9 @@ async function fetchSingleImage(url, options) {
 
 	try {
 		options.cookieJar.setCookieSync(res.headers.get('set-cookie'), url);
-	} catch (err) {
+	} catch (error) {
 		// Cookies can throw for all sort of reasons so we dont need to really handle it
-		/// console.log(err);
+		/// console.log(error);
 	}
 
 	if (res.status < 200 || res.status >= 400) {
@@ -274,7 +274,7 @@ function * findImages(body, baseUrl, options) {
 
 	try {
 		$ = cheerio.load(body);
-	} catch (err) {
+	} catch (error) {
 		return;
 	}
 
@@ -292,7 +292,7 @@ function * findImages(body, baseUrl, options) {
 		try {
 			url = new URL(url, baseUrl);
 			yield url.href;
-		} catch (err) {}
+		} catch (error) {}
 	}
 }
 

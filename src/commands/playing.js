@@ -247,7 +247,7 @@ async function exec(message, {query}) {
 		embed.setFooter(
 			`${numberOfResults - 1} other ${numberOfResults > 2 ? 'games' : 'game'} matched your query. ` +
 			// Use non-breaking spaces to make a nice linebreak after "query"
-			`This game is displayed because it seems to be the most relevant.`.replace(/\s/g, '\u00A0\u00A0')
+			'This game is displayed because it seems to be the most relevant.'.replace(/\s/g, '\u00A0\u00A0')
 		);
 	}
 

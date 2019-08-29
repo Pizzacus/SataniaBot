@@ -172,9 +172,9 @@ async function exec(message, args) {
 
 	try {
 		spedup = speedup(image, 1.25, 2);
-	} catch (err) {
-		err.type = 'render';
-		throw err;
+	} catch (error) {
+		error.type = 'render';
+		throw error;
 	}
 
 	let text = `Speed: **${Math.round(100 * 60 / spedup.duration * 100) / 100} loops** per minutes`;

@@ -5,7 +5,7 @@ function handleURL(url, withPath) {
 
 	try {
 		url = new URL(url);
-	} catch (err) {
+	} catch (error) {
 		return url;
 	}
 

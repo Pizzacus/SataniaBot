@@ -196,13 +196,13 @@ function render(...images) {
 				composeQueue();
 			});
 
-			promise.catch(err => {
+			promise.catch(error => {
 				// Sharp does not tag its errors so we need to do it ourself
-				if (!('type' in err)) {
-					err.type = 'render';
+				if (!('type' in error)) {
+					error.type = 'render';
 				}
 
-				reject(err);
+				reject(error);
 			});
 
 			return promise;

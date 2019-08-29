@@ -31,6 +31,7 @@ function exec(message, {text}) {
 			}
 		});
 	}
+
 	if (typeof text !== 'string' || text.length === 0) {
 		return message.reply('please specify something to say');
 	}

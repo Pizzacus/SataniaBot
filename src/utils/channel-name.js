@@ -30,7 +30,7 @@ function channelName(channel) {
 
 				return name || 'Unnamed';
 			}
-		// Falls through if it has a name
+			// Falls through if it has a name
 
 		case 'text':
 		case 'voice':

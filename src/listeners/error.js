@@ -85,6 +85,7 @@ function findErrorMessage(err, messages) {
 		if (typeof errDetails === 'function') {
 			errDetails = errDetails(err);
 		}
+
 		errMessage = prefix + errDetails;
 	}
 

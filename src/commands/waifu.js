@@ -88,7 +88,7 @@ const infoMethods = {
 
 		return (
 			`     **Cup Size**: '${cupSize}' in US Size ` +
-			`[(?)](http://www.sizeguide.net/bra-sizes.html)\n`
+			'[(?)](http://www.sizeguide.net/bra-sizes.html)\n'
 		);
 	}
 };

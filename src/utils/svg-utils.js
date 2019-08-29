@@ -19,7 +19,7 @@ function isSVG(content) {
 		svg = cheerio.load(content, {
 			xmlMode: true
 		});
-	} catch (err) {
+	} catch (error) {
 		return;
 	}
 
@@ -41,7 +41,7 @@ function getSVGSize(content) {
 		svg = cheerio.load(content, {
 			xmlMode: true
 		});
-	} catch (err) {
+	} catch (error) {
 		return;
 	}
 
@@ -53,9 +53,10 @@ function getSVGSize(content) {
 
 	let width = parseInt(root.attr('width'), 10);
 	let height = parseInt(root.attr('height'), 10);
-	const [, , viewWidth, viewHeight] = (root.attr('viewBox') || '')
+	const [viewWidth, viewHeight] = (root.attr('viewBox') || '')
 		.split(/[,\s]+/)
-		.map(int => parseInt(int, 10));
+		.map(num => parseInt(num, 10))
+		.slice(2);
 
 	if (!viewHeight || !viewWidth) {
 		return;

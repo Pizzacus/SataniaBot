@@ -16,7 +16,7 @@ async function exec(message) {
 	]);
 
 	return message.channel.send(
-		`♥ **Thank you for inviting me to your server!**\n\n` +
+		'♥ **Thank you for inviting me to your server!**\n\n' +
 		`Just open this link in your browser and follow the instructions!\n**<${link}>**`
 	);
 }
