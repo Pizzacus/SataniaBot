@@ -42,7 +42,7 @@ async function exec(message, args) {
 		duel = await duel.edit(duel.content + ' **FIRE!**');
 		await sleep(1500);
 
-		if (Math.random() > 0.5) {
+		if (Math.random() >= 0.5) {
 			duelers = duelers.reverse();
 		}
 

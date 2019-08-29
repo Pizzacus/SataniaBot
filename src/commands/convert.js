@@ -31,7 +31,7 @@ const imperialUnits = [
 	},
 	{
 		symbol: 'ft',
-		names: ['foot', 'feet', '\''],
+		names: ['foot', 'feet', 'foots', 'feets', '\''],
 		multiplier: 12
 	},
 	{
