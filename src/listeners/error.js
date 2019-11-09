@@ -4,6 +4,8 @@ const path = require('path');
 const {Listener} = require('discord-akairo');
 const Discord = require('discord.js');
 
+const config = requireUtil('config');
+
 const options = {
 	emitter: 'commandHandler',
 	eventName: 'error'
@@ -186,7 +188,7 @@ function exec(err, message) {
 		message.channel.type !== 'text' ||
 		message.channel.permissionsFor(message.client.user).has('SEND_MESSAGES');
 
-	if (errMessage && shouldReply) {
+	if (errMessage && shouldReply && !config.debug) {
 		return message.channel.send(errMessage);
 	}
 
