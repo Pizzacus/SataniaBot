@@ -41,8 +41,11 @@ async function exec(message, {user}) {
 	return sharp(image, {
 		density: optimalDensity(image, 300, 300)
 	})
-		.resize(300, 300)
-		.max()
+		.resize({
+			width: 300,
+			height: 300,
+			fit: 'inside'
+		})
 		.png()
 		.toBuffer({
 			resolveWithObject: true

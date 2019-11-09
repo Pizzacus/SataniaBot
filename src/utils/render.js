@@ -1,6 +1,14 @@
 const sharp = require('sharp');
 const {optimalDensity} = require('./svg-utils');
 
+const LEGACY_MODES = {
+	crop: 'cover',
+	embed: 'contain',
+	max: 'inside',
+	min: 'outside',
+	ignoreAspectRatio: 'fill'
+};
+
 /**
  * @typedef {Object} ImageOptions
  * @property {Promise<string|Buffer>|Buffer|string} image The image to be used to render.
@@ -14,7 +22,7 @@ const {optimalDensity} = require('./svg-utils');
  * @property {string} [resize='crop'] The method to use when resizing, accepted values are `'crop'`, `'embed'`, `'max'`, `'min'` and `'ignoreAspectRatio'`
  * @property {string} [crop='centre'] The type of crop if the resize mode is set to "crop", see this: http://sharp.dimens.io/en/stable/api-resize/#crop
  * @property {boolean} [withoutEnlargement=false] If resizing the image in a way that it would be enlarged is allowed
- * @property {boolean} [background] The background used, check Sharp.background http://sharp.dimens.io/en/stable/api-colour/#background for more informations
+ * @property {boolean} [background] Replace transparency with a given background
  */
 
 /**
@@ -78,29 +86,30 @@ async function processImage(options) {
 	const image = sharp(awaited, sharpOptions);
 
 	if (options.width || options.height) {
-		// This is actually a list of methods Sharp has to set the resize mode
-		const resizeModes = ['crop', 'embed', 'max', 'min', 'ignoreAspectRatio'];
+		let fit;
 
-		image.resize(options.width, options.height);
-
-		if (resizeModes.includes(options.resize)) {
-			if (options.resize === 'crop') {
-				// .crop takes an extra arg so it must be a special case
-				image.crop(options.crop);
-			} else if (typeof image[options.resize] === 'function') {
-				image[options.resize]();
+		if ('resize' in options) {
+			if (options.resize in LEGACY_MODES) {
+				fit = LEGACY_MODES[options.resize];
+			} else {
+				fit = options.resize;
 			}
-		} else if ('resize' in options) {
-			throw new TypeError('Unknown Resize Mode');
 		}
 
-		if (options.withoutEnlargement) {
-			image.withoutEnlargement();
-		}
+		image.resize({
+			width: options.width,
+			height: options.height,
+			fit,
+			position: options.crop || 'centre',
+			background: options.background || '#0000',
+			withoutEnlargement: options.withoutEnlargement || false
+		});
 	}
 
 	if ('background' in options) {
-		image.background(options.background).flatten();
+		image.flatten({
+			background: options.background
+		});
 	}
 
 	if ('rotate' in options) {
@@ -138,11 +147,11 @@ function composeImages(a, b) {
 		top: Math.max(0, a.y - b.y),
 		left: Math.max(0, a.x - b.x),
 		bottom: Math.max(0, (b.y + b.height) - (a.y + a.height)),
-		right: Math.max(0, (b.x + b.width) - (a.x + a.width))
+		right: Math.max(0, (b.x + b.width) - (a.x + a.width)),
+		background: '#0000'
 	};
 
 	return sharp(a.image, {raw: a.raw})
-		.background({r: 0, g: 0, b: 0, alpha: 0}) // Background isn't transparent by default and .extend uses the background, sooo
 		.extend(extension)
 		.overlayWith(b.image, {
 			top: Math.max(0, b.y - a.y),

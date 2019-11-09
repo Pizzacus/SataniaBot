@@ -18,7 +18,7 @@
 		"money": "^0.2.0",
 		"regenerate": "^1.4.0",
 		"seedrandom": "^3.0.1",
-		"sharp": "^0.21.3",
+		"sharp": "^0.22.1",
 		"simple-markdown": "0.4.4",
 		"tough-cookie": "^3.0.1"
 	},
