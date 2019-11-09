@@ -153,7 +153,7 @@ const options = {
 		}
 	}],
 	description: 'Speed up a GIF (by default, the last image sent is used)\n' +
-		'__**Examples:**__ `s!faster @Example#1234`, `s!faster :CustomEmoji:`, `s!faster` for the last image'
+		'__**Image command, see below.**__'
 };
 
 async function exec(message, args) {

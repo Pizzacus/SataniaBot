@@ -12,7 +12,7 @@ const options = {
 		match: 'content'
 	}],
 	description: 'When you REALLY wanna give love to someone, you don\'t hug them, you kiss them!\n' +
-		'__**Examples:**__ `s!kiss @Example#1234`, `s!kiss :CustomEmoji:`, `s!kiss` with a file attached'
+		'__**Image command, see below.**__'
 };
 
 async function exec(message, args) {

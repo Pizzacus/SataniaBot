@@ -12,7 +12,8 @@ const options = {
 		type: 'relevant',
 		match: 'content'
 	}],
-	description: 'For hugging people... Because everyone deserves hugs!!!\n__**Examples:**__ `s!hug @Example#1234`, `s!hug :CustomEmoji:`, `s!hug` with a file attached'
+	description: 'For hugging people... Because everyone deserves hugs!!!\n' +
+	'__**Image command, see below.**__'
 };
 
 async function exec(message, args) {

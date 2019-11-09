@@ -12,7 +12,7 @@ const options = {
 		match: 'content'
 	}],
 	description: 'Tucc someone to bed and make them sleep\n' +
-		'__**Examples:**__ `s!sleep @Example#1234`, `s!sleep :CustomEmoji:`, `s!sleep` with a file attached'
+		'__**Image command, see below.**__'
 };
 
 async function exec(message, args) {

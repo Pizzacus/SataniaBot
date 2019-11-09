@@ -21,7 +21,7 @@ const options = {
 	],
 	description:
 		'Desintegrate someone like in that big Avengers movie that just came out\n' +
-		'__**Examples:**__ `s!disintegrate`, `s!disintegrate @Example#1234`, `s!disintegrate :CustomEmoji:`, `s!disintegrate` with a file attached'
+		'__**Image command, see below.**__'
 };
 
 async function exec(message, {user}) {

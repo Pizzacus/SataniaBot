@@ -13,7 +13,7 @@ const options = {
 		default: message => message.author
 	}],
 	description: 'Sends a picture of you in attac mode to show someone they should really delete their post\n(Your avatar is used by default)\n' +
-		'__**Examples:**__ `s!delet`, `s!delet @Example#1234`, `s!delet :CustomEmoji:`, `s!delet` with a file attached'
+		'__**Image command, see below.**__'
 };
 
 async function exec(message, args) {

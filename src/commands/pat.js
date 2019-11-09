@@ -15,7 +15,7 @@ const options = {
 	],
 	description:
 		'Sends a picture of someone being pat, we only provide the comfiest pats!\n' +
-		'__**Examples:**__ `s!pat @Example#1234`, `s!pat :CustomEmoji:`, `s!pat` with a file attached'
+		'__**Image command, see below.**__'
 };
 
 const variants = [

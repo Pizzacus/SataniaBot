@@ -12,7 +12,7 @@ const options = {
 		match: 'content'
 	}],
 	description: 'Bite someone... In a cute way don\'t worry it won\'t hurt\n' +
-		'__**Examples:**__ `s!bite @Example#1234`, `s!bite :CustomEmoji:`, `s!bite` with a file attached'
+		'__**Image command, see below.**__'
 };
 
 async function exec(message, args) {
