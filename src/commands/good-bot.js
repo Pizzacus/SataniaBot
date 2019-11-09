@@ -1,6 +1,6 @@
 const {Command} = require('discord-akairo');
 
-const goodBotRegex = /^(good|best|great|nice|cool(est)?)\s+(bot|girl)\s*!*$/i;
+const goodBotRegex = /^(good|best|great|nice|cool(est)?)\s+(bot|girl|demon|waifu|akuma|devil)\s*!*$/i;
 
 const options = {
 	trigger: goodBotRegex

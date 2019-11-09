@@ -1,7 +1,7 @@
 const sleep = require('util').promisify(setTimeout);
 const {Command} = require('discord-akairo');
 
-const praiseRegex = /^(praise|just|love?|(all )?h(a|e)il|Sauda(ç|c)(õ|o)es a|a(ç|c)ai|salve|gloire? (à|a)|(alaben|rezen|diosa) a?)?\s*(kurumizawa\s*)?satan(i|y|ichi)a\s*-?(sama|san|chan|senpai)?\s*(McDowellu?\s*)?(!+|\?+)?$/i;
+const praiseRegex = /^(Слава|praise|just|love?|(all )?h(a|e)il|Sauda(ç|c)(õ|o)es a|a(ç|c)ai|salve|gloire? (à|a)|(alaben|rezen|diosa) a?)?\s*(kurumizawa\s*)?(satan(i|y|ichi)a|Сатании)\s*-?(sama|san|chan|senpai)?\s*(McDowellu?\s*)?((the\s*)?best\s*)?(!+|\?+)?$/i;
 
 const options = {
 	trigger: praiseRegex
