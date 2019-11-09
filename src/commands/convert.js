@@ -59,37 +59,37 @@ const imperialUnits = [
 const metricUnits = [
 	{
 		symbol: 'mm',
-		names: ['millimeter', 'millimeters'],
+		names: ['millimeter', 'millimeters', 'millimetre', 'millimetres'],
 		multiplier: 0.001
 	},
 	{
 		symbol: 'cm',
-		names: ['centimeter', 'centimeters'],
+		names: ['centimeter', 'centimeters', 'centimetre', 'centimetres'],
 		multiplier: 0.01
 	},
 	{
 		symbol: 'dm',
-		names: ['decimeter', 'decimeters'],
+		names: ['decimeter', 'decimeters', 'decimetre', 'decimetres'],
 		multiplier: 0.1
 	},
 	{
 		symbol: 'm',
-		names: ['meter', 'meters'],
+		names: ['meter', 'meters', 'metre', 'metres'],
 		multiplier: 1
 	},
 	{
 		symbol: 'dam',
-		names: ['decameter', 'decameters'],
+		names: ['decameter', 'decameters', 'decametre', 'decametres'],
 		multiplier: 10
 	},
 	{
 		symbol: 'hm',
-		names: ['hectometer', 'hectometers'],
+		names: ['hectometer', 'hectometers', 'hectomatre', 'hectometres'],
 		multiplier: 100
 	},
 	{
 		symbol: 'km',
-		names: ['kilometer', 'kilometers'],
+		names: ['kilometer', 'kilometers', 'kilometre', 'kilometres'],
 		multiplier: 1000
 	}
 ];
@@ -215,7 +215,7 @@ function exec(message, args) {
 
 			// A special case to use the feet'inches" format when the number is
 			// between 1 and 15 feet
-			if (inches <= 180 && inches >= 12) {
+			if (inches >= 12 && inches <= 180) {
 				const rounded = Math.round(inches);
 				output = `${Math.floor(rounded / 12)}'${rounded % 12}"`;
 			} else {
