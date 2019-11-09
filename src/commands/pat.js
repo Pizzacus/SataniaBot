@@ -179,8 +179,11 @@ async function exec(message, args) {
 		background: '#36393e'
 	};
 
-	await message.channel.send(
-		`**${link.name}** was patted successfully! \u2764`,
+	const self = (link.type === 'user' || link.type === 'member') &&
+	link.source.id === message.client.user.id;
+
+	const reply = await message.channel.send(
+		`**${link.name}** was patted successfully!${self ? ' **Thank you!!!**' : ''} \u2764`,
 		{
 			files: [
 				{
@@ -196,6 +199,10 @@ async function exec(message, args) {
 			]
 		}
 	);
+
+	if (self) {
+		reply.react('♥');
+	}
 
 	await message.channel.stopTyping();
 }
