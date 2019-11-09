@@ -13,17 +13,25 @@ async function exec(message) {
 	 */
 	async function helpDM(user) {
 		if (user.id !== message.client.user.id && !user.bot) {
-			const embed = new Discord.RichEmbed();
+			let embed = new Discord.RichEmbed();
 			embed.setTitle('Help for the Satania Bot!');
 			embed.setColor('#ee6666');
 
-			user.client.commandHandler.modules.map(command => {
+			for (const command of user.client.commandHandler.modules.values()) {
 				if (command.description) {
-					embed.addField(user.client.commandHandler.prefix(message) + command.id, command.description);
-				}
+					const title = user.client.commandHandler.prefix(message) + command.id;
+					const description = command.description + '\n\u2060';
 
-				return null;
-			});
+					if (embed.length + title.length + description.length >= 6000 || embed.fields.length >= 25) {
+						await user.send(embed);
+
+						embed = new Discord.RichEmbed(); // eslint-disable-line
+						embed.setColor('#ee6666');
+					}
+
+					embed.addField(title, description);
+				}
+			}
 
 			await user.send(embed);
 			await user.send('', {
