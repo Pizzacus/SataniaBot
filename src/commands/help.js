@@ -43,12 +43,12 @@ Commands labelled as Image Commands (like s!pat, s!hug, s!kiss, ...) can all get
 These sources are:
 • **Images directly attached to the message as a file**
 • **URLs in the message,** they don't have to link directly to the image, Satania can often figure out what image to use from a web page
-• **Avatars of mentionned users**
+• **Avatars of mentioned users**
 • **Emojis used in the message** (both default and custom)
-• **The server icon,** when you use an everyone mention, or write the name of the server
+• **The server icon,** when you use an everyone mention or write the name of the server
 • **The last images uploaded in the chat,** by writing \`^^^^\` characters after the command and nothing else
 
-If none of these match, Satania will attempt to search the username among the members of the server, this allows you to use image commands on people without mentionning them.
+If none of these matches, Satania will attempt to search the username among the members of the server, this allows you to use image commands on people without mentioning them.
 
 **Have fun with them! ♥**
 					`.trim(),
