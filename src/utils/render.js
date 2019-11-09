@@ -23,6 +23,7 @@ const LEGACY_MODES = {
  * @property {string} [crop='centre'] The type of crop if the resize mode is set to "crop", see this: http://sharp.dimens.io/en/stable/api-resize/#crop
  * @property {boolean} [withoutEnlargement=false] If resizing the image in a way that it would be enlarged is allowed
  * @property {boolean} [background] Replace transparency with a given background
+ * @property {object} [raw] An object with width, height, and channels properties to work with raw data
  */
 
 /**
@@ -34,7 +35,7 @@ const LEGACY_MODES = {
  * Can be used on the .then method of a Sharp promise to make it return an object representing the image in the rendering queue
  * @param {*} extraOptions All the keys in this object will be added to the returned object, use this to pass x and y values
  * @private
- * @returns {Object} the queuable data
+ * @returns {ImageOptions} The queuable data
  * @example
  * 	sharp('image.jpg')
  * 		.raw()
@@ -130,40 +131,46 @@ async function processImage(options) {
 }
 
 /**
- * Composes two sharp images together, the advantage over .overlayWith
+ * Composes multiple sharp images together, the advantage over .composite
  * is that this function will work even when the second image goes out
  * of the bounds of the first one.
- * @param {Sharp} a The first image in the back
- * @param {Sharp} b The overlayed image on the front
+ * @param {...ImageOptions} images The images to compose
  * @returns {Sharp} The result of the operation
  */
-function composeImages(a, b) {
-	// Sharp cannot overlay two images if one goes out of the bounds of the other
-	// So instead we can increase the size of the first one to be juuuuust big enough to overlay the second one
+function composeImages(...images) {
+	// Sharp cannot overlay images if one goes out of the bounds of the other
+	// So instead we can increase the size of the first one to be juuuuust big enough to overlay the others
 	// This is done by using the Sharp .extend method, this object contains the parameters which will be passed to the function
 
-	// Now I know this is all confusing Maths, but, just know that we are calculating margins, to give the other image some space
-	const extension = {
-		top: Math.max(0, a.y - b.y),
-		left: Math.max(0, a.x - b.x),
-		bottom: Math.max(0, (b.y + b.height) - (a.y + a.height)),
-		right: Math.max(0, (b.x + b.width) - (a.x + a.width)),
-		background: '#0000'
+	const boundaries = {
+		left: Math.min(...images.map(img => img.x)),
+		top: Math.min(...images.map(img => img.y)),
+		right: Math.max(...images.map(img => img.x + img.width)),
+		bottom: Math.max(...images.map(img => img.y + img.height))
 	};
 
-	return sharp(a.image, {raw: a.raw})
-		.extend(extension)
-		.overlayWith(b.image, {
-			top: Math.max(0, b.y - a.y),
-			left: Math.max(0, b.x - a.x),
-			raw: b.raw
+	const [base, ...over] = images;
+
+	return sharp(base.image, {raw: base.raw})
+		.extend({
+			left: base.x - boundaries.left,
+			top: base.y - boundaries.top,
+			bottom: boundaries.bottom - (base.y + base.height),
+			right: boundaries.right - (base.x + base.width),
+			background: '#0000'
 		})
+		.composite(over.map(img => ({
+			input: img.image,
+			raw: img.raw,
+			left: img.x - boundaries.left,
+			top: img.y - boundaries.top
+		})))
 		.raw()
 		.toBuffer({resolveWithObject: true})
 		.then(
 			queueData({
-				x: Math.min(a.x, b.x),
-				y: Math.min(a.y, b.x)
+				x: boundaries.left,
+				y: boundaries.top
 			})
 		);
 }
@@ -218,14 +225,22 @@ function render(...images) {
 		}
 
 		function composeQueue() {
-			// Loops though the queue, if two finished layers are next to each other in the queue,
+			// Loops though the queue, if several finished layers are next to each other in the queue,
 			// they get merged into one, until eventually we merged everything and we can resolve with the final value
-			for (let i = 0; i + 1 < queue.length; i++) {
-				const a = queue[i];
-				const b = queue[i + 1];
+			for (let i = 0; i + 1 < queue.length; i++) { // It's i + 1 because the last element can never be merged anyway
+				const consecutive = [];
 
-				if (!(a instanceof Promise) && !(b instanceof Promise)) {
-					queue.splice(i, 2, handlePromise(composeImages(a, b)));
+				while (!(queue[i] instanceof Promise || queue[i] == null)) {
+					consecutive.push(queue[i]);
+					i++;
+				}
+
+				if (consecutive.length > 1) {
+					queue.splice(
+						i - consecutive.length,
+						consecutive.length,
+						handlePromise(composeImages(...consecutive))
+					);
 				}
 			}
 		}
