@@ -12,11 +12,11 @@ const relevantLink = requireUtil('relevant-link');
 const fetchImage = requireUtil('fetch-image');
 
 // NLP override
-const ARE_NOUNS = new Set(['costume', 'constructor', 'cityscape', 'blur', 'wear', 'outdoors']);
-const NOT_NOUNS = new Set(['fun', 'kind']);
-const SKIP_WORDS = new Set(['one', 'people', 'no person']);
+const ARE_NOUNS = new Set(['costume', 'constructor', 'cityscape', 'blur', 'wear', 'outdoors', 'kimono', 'closeup']);
+const NOT_NOUNS = new Set(['fun', 'kind', 'disjunct', 'ball-shaped']);
+const SKIP_WORDS = new Set(['one', 'people', 'no person', 'graphic']);
 const ARE_COUNTABLE = new Set(['woman']);
-const NOT_COUNTABLE = new Set(['springtime', 'summer', 'fall', 'winter', 'baking', 'affection', 'togetherness', 'romance', 'ivory', 'fashion', 'art']);
+const NOT_COUNTABLE = new Set(['horror', 'springtime', 'summer', 'fall', 'winter', 'baking', 'affection', 'togetherness', 'romance', 'ivory', 'fashion', 'art', 'marijuana', 'healthcare', 'cannabis', 'plastic', 'geography', 'simplicity', 'creativity', 'swimming', 'glamour']);
 const NOUN_LIKE = ['NN', 'NNS', 'NNP', 'NNPS', 'VBG'];
 const ADJECTIVE_LIKE = ['JJ', 'CD'];
 
