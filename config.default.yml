@@ -9,6 +9,9 @@ sharp-concurency: 4
 # If true, operational errors (that generally don't matter) will be logged in data/error-logs too
 debug: false
 
+# You can set this for the vision AI commands, if it's not set, the command just won't exist
+clarifai-key: null
+
 download:
 	cache: yes
 	retry: 5
