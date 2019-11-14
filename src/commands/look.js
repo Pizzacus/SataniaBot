@@ -1,22 +1,22 @@
 const {Command} = require('discord-akairo');
 const Discord = require('discord.js');
 const Clarifai = require('clarifai');
-const fileType = require('file-type');
 const sharp = require('sharp');
 const {Inflectors} = require('en-inflectors');
 const indefinite = require('indefinite');
 const lexi = require('en-lexicon');
 
+const {optimalDensity} = requireUtil('svg-utils');
 const config = requireUtil('config');
 const relevantLink = requireUtil('relevant-link');
 const fetchImage = requireUtil('fetch-image');
 
 // NLP override
-const ARE_NOUNS = new Set(['costume', 'constructor', 'cityscape', 'blur', 'wear', 'outdoors', 'kimono', 'closeup']);
-const NOT_NOUNS = new Set(['fun', 'kind', 'disjunct', 'ball-shaped']);
-const SKIP_WORDS = new Set(['one', 'people', 'no person', 'graphic']);
+const ARE_NOUNS = new Set(['costume', 'constructor', 'cityscape', 'blur', 'wear', 'outdoors', 'kimono', 'closeup', 'accessory']);
+const NOT_NOUNS = new Set(['fun', 'kind', 'disjunct', 'ball-shaped', 'vintage']);
+const SKIP_WORDS = new Set(['one', 'people', 'no person', 'graphic', 'vector']);
 const ARE_COUNTABLE = new Set(['woman']);
-const NOT_COUNTABLE = new Set(['horror', 'springtime', 'summer', 'fall', 'winter', 'baking', 'affection', 'togetherness', 'romance', 'ivory', 'fashion', 'art', 'marijuana', 'healthcare', 'cannabis', 'plastic', 'geography', 'simplicity', 'creativity', 'swimming', 'glamour']);
+const NOT_COUNTABLE = new Set(['horror', 'springtime', 'summer', 'fall', 'winter', 'baking', 'affection', 'togetherness', 'romance', 'ivory', 'fashion', 'art', 'marijuana', 'healthcare', 'cannabis', 'plastic', 'geography', 'simplicity', 'creativity', 'swimming', 'glamour', 'vandalism', 'fright', 'curiosity', 'patriotism']);
 const NOUN_LIKE = ['NN', 'NNS', 'NNP', 'NNPS', 'VBG'];
 const ADJECTIVE_LIKE = ['JJ', 'CD'];
 
@@ -55,22 +55,19 @@ async function exec(message, args) {
 
 	await message.channel.startTyping();
 
-	let image = await fetchImage(link.url);
-
-	const type = fileType(image);
-
-	if (type.mime === 'image/webp') {
-		image = await sharp(image).toFormat('png').toBuffer();
-	}
+	const image = await fetchImage(link.url);
+	const converted = await sharp(image, {
+		density: optimalDensity(image, 800, 800)
+	})
+		.toFormat('png')
+		.toBuffer();
 
 	const res = await clarifai.models.predict(
 		Clarifai.GENERAL_MODEL,
 		{
-			base64: image.toString('base64')
+			base64: converted.toString('base64')
 		}
 	);
-
-	console.dir(res);
 
 	const tags = res.outputs[0].data.concepts;
 
@@ -141,16 +138,14 @@ async function exec(message, args) {
 		}
 	}
 
-	console.log(nouns);
-
 	const embed = new Discord.RichEmbed();
 
 	embed.setDescription(`On this image, I see ${list(nouns.slice(0, 10))}.\n\nIt looks ${list(adjectives.slice(0, 10))}.`);
 	embed.attachFiles([{
-		name: 'image.' + type.ext,
-		attachment: image
+		name: 'image.png',
+		attachment: converted
 	}]);
-	embed.setImage('attachment://image.' + type.ext);
+	embed.setImage('attachment://image.png');
 
 	embed.setColor('#2962ff');
 	embed.setFooter('AI by Clarifai (clarifai.com)', 'https://github.com/Clarifai.png');
