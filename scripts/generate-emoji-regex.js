@@ -40,7 +40,7 @@ function parseFilename(filename) {
 console.log('Generating the Regex...');
 console.log('1. Fetch the hash of the Twemoji SVG emoji folder');
 
-fetch('https://api.github.com/repos/twitter/twemoji/contents/2')
+fetch('https://api.github.com/repos/twitter/twemoji/contents/assets')
 	.then(res => res.json())
 	.then(res => {
 		const dir = res.find(dir => dir.name === 'svg');
