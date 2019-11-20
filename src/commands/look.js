@@ -159,7 +159,7 @@ async function exec(message, args) {
 	const GENDER_DESCRIPTION = [
 		'looks like a boy',
 		'looks somewhat like a boy',
-		'has am ambiguous gender',
+		'has an ambiguous gender',
 		'looks somewhat like a girl',
 		'looks like a girl'
 	];
