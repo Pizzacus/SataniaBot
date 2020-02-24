@@ -129,7 +129,7 @@ async function exec(message, args) {
 	return message.channel.send({
 		embed: fixEmbed({
 			author: {
-				name: `Comfiness forcast for ${nick(user, message.channel)}`,
+				name: `Comfiness forecast for ${nick(user, message.channel)}`,
 				icon_url: user.displayAvatarURL || user.user.displayAvatarURL // eslint-disable-line camelcase
 			},
 			title: 'Your forecasted comfiness for tomorrow is:',
