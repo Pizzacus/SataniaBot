@@ -137,6 +137,14 @@ const handler = {
 			name = domain(embed.thumbnail.url);
 		}
 
+		if (embed.type === 'gifv') {
+			url = embed.url;
+		}
+
+		if (embed.provider && embed.provider.name) {
+			name = embed.provider.name;
+		}
+
 		return {
 			type: 'embed',
 			url,
@@ -200,6 +208,8 @@ const handler = {
 		// as the regex would report a match on a string that is only spaces
 		if (/^[\^＾˄ˆᶺ⌃\s]+$/.test(content.trim())) {
 			const lastMessage = lastImage(message.channel);
+
+			console.dir(lastMessage.embeds);
 
 			if (lastMessage) {
 				resolve.push(lastMessage.attachments, lastMessage.embeds);
