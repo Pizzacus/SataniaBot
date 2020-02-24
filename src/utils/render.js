@@ -113,9 +113,7 @@ async function processImage(options) {
 		});
 	}
 
-	if ('rotate' in options) {
-		image.rotate(options.rotate);
-	}
+	image.rotate(options.rotate || undefined);
 
 	const output = await image
 		.raw()
