@@ -16,7 +16,7 @@ const formats = requireUtil('get-supported-formats')();
 // NLP override
 const ARE_NOUNS = new Set(['costume', 'constructor', 'cityscape', 'blur', 'wear', 'outdoors', 'kimono', 'closeup', 'accessory']);
 const NOT_NOUNS = new Set(['fun', 'kind', 'disjunct', 'ball-shaped', 'vintage']);
-const SKIP_WORDS = new Set(['one', 'people', 'no person', 'graphic', 'vector']);
+const SKIP_WORDS = new Set(['one', 'two', 'three', 'four', 'people', 'no person', 'graphic', 'vector', 'horizontal', 'vertical']);
 const ARE_COUNTABLE = new Set(['woman']);
 const NOT_COUNTABLE = new Set([
 	'horror',
@@ -70,6 +70,14 @@ function list(arr) {
 	return arr.slice(0, arr.length - 1).join(', ') + ', and ' + arr[arr.length - 1];
 }
 
+function topConcept(concepts, vocabID = null) {
+	if (vocabID) {
+		concepts = concepts.filter(concept => concept.vocab_id === vocabID);
+	}
+
+	return concepts.reduce((a, b) => a.value > b.value ? a : b);
+}
+
 async function exec(message, args) {
 	const link = relevantLink(message, args.user);
 
@@ -91,14 +99,21 @@ async function exec(message, args) {
 	const type = fileType(image);
 
 	// The Clarifai docs say they support WEBP but this desn't appear to be the case
-	if (!type || !['jpg', 'png', 'tif', 'bmp'].includes(type.ext)) {
+	// JPG is re-encoded to handle rotated images
+	if (!type || !['png', 'tif', 'bmp'].includes(type.ext)) {
 		const img = await sharp(image, {
 			density: optimalDensity(image, 800, 800)
 		});
 
 		const stats = await img.stats();
 
+		img.rotate();
+
 		image = await img.toFormat(stats.isOpaque ? 'jpg' : 'png').toBuffer();
+	}
+
+	if (image.length > config.download.maxSize) {
+		return message.channel.send('**File too big:** After being converted, your image was too big to be analysed.');
 	}
 
 	const res = await clarifai.models.predict(
@@ -124,13 +139,13 @@ async function exec(message, args) {
 		);
 
 		if (res.outputs[0].data.regions) {
-			for (const data of res.outputs[0].data.regions) {
-				const face = data.data.face;
-				const region = data.region_info;
+			for (const {data, region_info: region} of res.outputs[0].data.regions) {
+				const concepts = data.concepts;
 
 				people.push({
-					age: parseInt(face.age_appearance.concepts[0].name, 10),
-					gender: face.gender_appearance.concepts.find(val => val.id === 'ai_cVWr8NK5').value, // Value of femininity
+					age: parseInt(topConcept(concepts, 'age_appearance').name, 10),
+					gender: concepts.find(val => val.id === 'ai_cVWr8NK5').value, // Value of femininity
+					multiculturalAppearance: topConcept(concepts, 'multicultural_appearance').name,
 					position: {
 						y: region.bounding_box.top_row,
 						height: region.bounding_box.bottom_row - region.bounding_box.top_row,
@@ -141,6 +156,8 @@ async function exec(message, args) {
 			}
 		}
 	}
+
+	people.sort((a, b) => a.position.x - b.position.x);
 
 	let description = '';
 
@@ -156,36 +173,48 @@ async function exec(message, args) {
 		description += 'It looks undefinable.\n\n';
 	}
 
-	const GENDER_DESCRIPTION = [
-		'looks like a boy',
-		'looks somewhat like a boy',
-		'has an ambiguous gender',
-		'looks somewhat like a girl',
-		'looks like a girl'
-	];
+	const peopleDescriptions = people.map(person => {
+		const [MALE, FEMALE] = person.age < 25 ? ['boy', 'girl'] : ['man', 'woman'];
+		const GENDER_DESCRIPTION = [
+			`looks like a ${MALE}`,
+			`looks somewhat like a ${MALE}`,
+			'has an ambiguous gender',
+			`looks somewhat like a ${FEMALE}`,
+			`looks like a ${FEMALE}`
+		];
 
-	const peopleDescriptions = people.map(person =>
-		`${indefinite(person.age, {articleOnly: true})} **${person.age} year${person.age === 1 ? '' : 's'}-old** ` +
-		`that **${GENDER_DESCRIPTION[Math.floor(person.gender * GENDER_DESCRIPTION.length)]}**`
-	);
+		const agePart = `${indefinite(person.age, {articleOnly: true})} **${person.age}** year${person.age === 1 ? '' : 's'}-old `;
+		const multiculturalAppearancePart = `**${person.multiculturalAppearance}** person `;
+		const genderPart = `that **${GENDER_DESCRIPTION[Math.floor(person.gender * GENDER_DESCRIPTION.length)]}**`;
+
+		return agePart + multiculturalAppearancePart + genderPart;
+	});
 
 	if (!hasPeople) {
-		description += 'At a quick glance, **I can\'t see anyone.**\n\n';
+		description += 'At a quick glance, **I can\'t see anyone.**';
 	} else if (people.length === 0) {
-		description += 'After looking thoroughly, **I can\'t see anyone.**\n\n';
+		description += 'After looking thoroughly, **I can\'t see anyone.**';
 	} else if (people.length === 1) {
-		description += `I think I see **someone** that appears to be ${peopleDescriptions[0]}.\n\n`;
+		description += `I see **someone** who appears to be ${peopleDescriptions[0]}.`;
 	} else {
-		description += `I think I see **${people.length.toLocaleString()} people,** they appear to be ${list(peopleDescriptions)}.\n\n`;
-	}
+		description += `I see **${people.length.toLocaleString()} people**`;
 
-	if (people.length > 0) {
-		image = await generateFaceHighlight(image, people);
+		if (people.length < 8) {
+			description += ', they appear to be:\n';
+			description += peopleDescriptions.map(person => `  • ${person}`).join('\n');
+		} else {
+			description += '.';
+		}
 	}
 
 	const embed = new Discord.RichEmbed();
 
 	embed.setDescription(description);
+
+	if (people.length > 0) {
+		image = await generateFaceHighlight(image, people);
+	}
+
 	embed.attachFiles([{
 		name: 'image.png',
 		attachment: image
