@@ -129,10 +129,10 @@ async function exec(message, args) {
 	return message.channel.send({
 		embed: fixEmbed({
 			author: {
-				name: `Comfiness prediction for ${nick(user, message.channel)}`,
+				name: `Comfiness forcast for ${nick(user, message.channel)}`,
 				icon_url: user.displayAvatarURL || user.user.displayAvatarURL // eslint-disable-line camelcase
 			},
-			title: 'Your predicted comfiness for tomorrow is:',
+			title: 'Your forecasted comfiness for tomorrow is:',
 			fields: [
 				{
 					name: `**__${rating}__**   (${(comfy.comfvalue / MAX_COMFY * 100).toFixed(1)} %)`,
@@ -140,7 +140,7 @@ async function exec(message, args) {
 				}
 			],
 			footer: {
-				text: `Prediction for ${
+				text: `Forecast for ${
 					comfy.date.toLocaleDateString('en', {
 						year: 'numeric',
 						month: 'long',
