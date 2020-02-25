@@ -109,6 +109,12 @@ async function exec(message, {query}) {
 		embed.addField('\u2800', description, true);
 	}
 
+	if (embed.fields.length > 3 && embed.fields.length % 3 === 2) {
+		// Adds an empty field to align things properly
+		// when there are two remaining fields at the end
+		embed.addBlankField(true);
+	}
+
 	if (!embed.footer && results.length > 1) {
 		embed.setFooter(
 			`${results.length - 1} other ${results.length > 2 ? 'games' : 'game'} matched your query. Use "s!searchgames ${query}" to see them!`
