@@ -37,7 +37,7 @@ async function exec(message, args) {
 		background: '#36393e'
 	});
 
-	await message.channel.send(`**${nick(message.author, message.channel)}** threw **${link.name}** to the horny jail!`, {
+	await message.channel.send(`**${nick(message.author, message.channel)}** threw **${link.name}** in the horny jail!`, {
 		files: [{
 			name: 'image.jpeg',
 			attachment: await image
