@@ -30,10 +30,10 @@ async function exec(message, args) {
 		image: './assets/horny.jpg'
 	}, {
 		image: fetchImage(relevantLink(message.author).url),
-		height: 150,
-		width: 150,
+		height: 135,
+		width: 135,
 		x: 45,
-		y: 310,
+		y: 320,
 		background: '#36393e'
 	});
 
