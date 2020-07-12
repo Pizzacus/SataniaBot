@@ -70,7 +70,7 @@ function getComfy(id, date = 'tomorrow') {
 	url.searchParams.set('id', id);
 	url.searchParams.set('date', date);
 
-	return fetch(url)
+	return fetch(url.href)
 		.then(res => {
 			if (res.status < 200 && res.status >= 400) {
 				const err = new fetch.FetchError(
