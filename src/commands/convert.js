@@ -274,7 +274,7 @@ const metricUnits = {
 			{
 				symbol: 'Mg',
 				names: [
-					'megagram', 'megagrams', 'megagramme', 'megagrammes', 'tonne', 'tonnes', 'metric ton', 'metric tons', 'metric tonne', 'metric tonnes'
+					'metric ton', 'metric tons', 'megagram', 'megagrams', 'megagramme', 'megagrammes', 'tonne', 'tonnes', 'metric tonne', 'metric tonnes'
 				],
 				multiplier: 1000000
 			}
