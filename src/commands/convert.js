@@ -134,7 +134,7 @@ const imperialUnits = {
 		]
 	},
 	lengths: {
-		convert: sum => simpleConvert(sum, inch, metricUnits.volume, ['km', 'm', 'cm', 'mm']),
+		convert: sum => simpleConvert(sum, inch, metricUnits.lengths, ['km', 'm', 'cm', 'mm']),
 		units: [
 			{
 				symbol: 'in',
