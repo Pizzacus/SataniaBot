@@ -89,7 +89,7 @@ const imperialUnits = {
 		]
 	},
 	weight: {
-		convert: sum => simpleConvert(sum, pound, metricUnits.weight, ['kg', 'g', 'mg']),
+		convert: sum => simpleConvert(sum, pound, metricUnits.weight, ['kg', 'g', 'Mg']),
 		units: [
 			{
 				symbol: 'gr',
