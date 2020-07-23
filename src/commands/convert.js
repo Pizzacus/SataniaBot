@@ -9,7 +9,7 @@ const options = {
 		}
 	],
 	description:
-		'Very handy command to convert lengths from the metric ' +
+		'Very handy command to convert units from the metric ' +
 		'system to imperial, and vice-versa!\n' +
 		'__**Examples:**__: `s!convert 1km`, `s!convert 6.5 miles`, ' +
 		'`s!convert 6 meters`, `s!convert 5\'6"`'
