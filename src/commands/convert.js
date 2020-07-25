@@ -38,7 +38,7 @@ const imperialUnits = {
 		units: [
 			{
 				symbol: 'F',
-				names: ['fahrenheit', 'f'],
+				names: ['fahrenheit', '°F', 'f'],
 				multiplier: 1
 			}
 		]
@@ -48,7 +48,7 @@ const imperialUnits = {
 		units: [
 			{
 				symbol: 'R',
-				names: ['rankine', 'r'],
+				names: ['rankine', '°R', 'r'],
 				multiplier: 1
 			}
 		]
@@ -78,7 +78,7 @@ const imperialUnits = {
 			},
 			{
 				symbol: 'gal',
-				names: ['gallon', 'gallons'],
+				names: ['gallon', 'US gallons', 'US gallon', 'American gallon', 'American gallons', 'gallons'],
 				multiplier: 128
 			},
 			{
@@ -176,7 +176,7 @@ const metricUnits = {
 		units: [
 			{
 				symbol: 'C',
-				names: ['c', 'celsius', 'centigrade', 'centigrades'],
+				names: ['c', '°C', 'celsius', 'centigrade', 'centigrades'],
 				multiplier: 1
 			}
 		]
@@ -186,7 +186,7 @@ const metricUnits = {
 		units: [
 			{
 				symbol: 'K',
-				names: ['kelvin', 'kelvins', 'k'],
+				names: ['kelvin', '°K', 'kelvins', 'k'],
 				multiplier: 1
 			}
 		]
