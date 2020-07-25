@@ -269,7 +269,7 @@ const metricUnits = {
 				names: ['kilogram', 'kilograms', 'kilogramme', 'kilogrammes'],
 				multiplier: 1000
 			},
-			// Ofiiclaly it's 'megagram'. However, ton/tonne is also used and since both imperial and metric use it,
+			// Officially, it's 'megagram'. However, ton/tonne is also used and since both imperial and metric use it,
 			// 'Ton' will be imperial and 'Tonne' will be metric
 			{
 				symbol: 'Mg',
@@ -336,13 +336,14 @@ const metricUnits = {
 	}
 };
 
+const unitSystems = [...Object.values(imperialUnits), ...Object.values(metricUnits)];
+
 /**
  * Deals with the conversion if it's simple enough.
  * @param {number} sum The sum that is calculated in exec.
  * @param {number} multiplier The number that should be multiplied to get the new unit.
  * @param {Object} baseUnit A base unit object that contains all units. Example: metricUnits.weight.
- * @param {Array} specialUnits An array containing what kind of units should be shown as a result. This should contain non obscure units.
- *
+ * @param {Array<string>} specialUnits An array containing what kind of units should be shown as a result. This should contain non obscure units.
  * @returns {number} A user-friendly representation of the value
  */
 function simpleConvert(sum, multiplier, baseUnit, specialUnits) {
@@ -427,7 +428,6 @@ function prefixUnit(units, value) {
 }
 
 function exec(message, args) {
-	const unitSystems = [...Object.values(imperialUnits), ...Object.values(metricUnits)];
 	const input = parseUnits(args.convert, unitSystems);
 	const baseUnit = unitSystems.find(({units}) => {
 		return input.every(part => units.some(unit => unit.symbol === part.symbol));
