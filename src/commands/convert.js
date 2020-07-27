@@ -107,7 +107,7 @@ const imperialUnits = {
 				multiplier: 1 / 16
 			},
 			{
-				symbol: 'lbs',
+				symbol: 'lb',
 				names: ['pound', 'pounds'],
 				multiplier: 1
 			},
@@ -162,7 +162,7 @@ const imperialUnits = {
 				multiplier: 12 * 3 * 22 * 10
 			},
 			{
-				symbol: 'ml',
+				symbol: 'mi',
 				names: ['mile', 'miles'],
 				multiplier: 12 * 3 * 22 * 10 * 8
 			}
@@ -232,7 +232,7 @@ const metricUnits = {
 		]
 	},
 	mass: {
-		convert: sum => simpleConvert(sum, 1 / pound, imperialUnits.mass, ['oz', 'lbs', 't']),
+		convert: sum => simpleConvert(sum, 1 / pound, imperialUnits.mass, ['oz', 'lb', 't']),
 		units: [
 			{
 				symbol: 'mg',
