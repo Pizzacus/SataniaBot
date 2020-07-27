@@ -88,8 +88,8 @@ const imperialUnits = {
 			}
 		]
 	},
-	weight: {
-		convert: sum => simpleConvert(sum, pound, metricUnits.weight, ['kg', 'g', 'Mg']),
+	mass: {
+		convert: sum => simpleConvert(sum, pound, metricUnits.mass, ['kg', 'g', 'Mg']),
 		units: [
 			{
 				symbol: 'gr',
@@ -107,8 +107,8 @@ const imperialUnits = {
 				multiplier: 1 / 16
 			},
 			{
-				symbol: 'lbs',
-				names: ['pound', 'pounds'],
+				symbol: 'lb',
+				names: ['pound', 'pounds', 'lbs'],
 				multiplier: 1
 			},
 			{
@@ -133,8 +133,8 @@ const imperialUnits = {
 			}
 		]
 	},
-	lengths: {
-		convert: sum => simpleConvert(sum, inch, metricUnits.lengths, ['km', 'm', 'cm', 'mm']),
+	length: {
+		convert: sum => simpleConvert(sum, inch, metricUnits.length, ['km', 'm', 'cm', 'mm']),
 		units: [
 			{
 				symbol: 'in',
@@ -162,9 +162,24 @@ const imperialUnits = {
 				multiplier: 12 * 3 * 22 * 10
 			},
 			{
-				symbol: 'ml',
+				symbol: 'mi',
 				names: ['mile', 'miles'],
 				multiplier: 12 * 3 * 22 * 10 * 8
+			},
+			{
+				symbol: 'ftm',
+				names: ['fathom', 'fathoms'],
+				multiplier: 12 * 3 * 2.02667
+			},
+			{
+				symbol: 'cable',
+				names: ['cables'],
+				multiplier: 12 * 3 * 2.02667 * 100
+			},
+			{
+				symbol: 'nmi',
+				names: ['nautical mile', 'nautical miles'],
+				multiplier: 12 * 3 * 2.02667 * 100 * 10
 			}
 		]
 	}
@@ -231,8 +246,8 @@ const metricUnits = {
 			}
 		]
 	},
-	weight: {
-		convert: sum => simpleConvert(sum, 1 / pound, imperialUnits.weight, ['oz', 'lbs', 't']),
+	mass: {
+		convert: sum => simpleConvert(sum, 1 / pound, imperialUnits.mass, ['oz', 'lb', 't']),
 		units: [
 			{
 				symbol: 'mg',
@@ -280,11 +295,11 @@ const metricUnits = {
 			}
 		]
 	},
-	lengths: {
+	length: {
 		convert: sum => {
 			const inches = sum / inch;
-			const displayedUnits = imperialUnits.lengths.units.filter(unit =>
-				['ml', 'ft', 'in'].includes(unit.symbol)
+			const displayedUnits = imperialUnits.length.units.filter(unit =>
+				['mi', 'ft', 'in'].includes(unit.symbol)
 			);
 
 			// A special case to use the feet'inches" format when the number is
