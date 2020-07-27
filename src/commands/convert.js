@@ -88,8 +88,8 @@ const imperialUnits = {
 			}
 		]
 	},
-	weight: {
-		convert: sum => simpleConvert(sum, pound, metricUnits.weight, ['kg', 'g', 'Mg']),
+	mass: {
+		convert: sum => simpleConvert(sum, pound, metricUnits.mass, ['kg', 'g', 'Mg']),
 		units: [
 			{
 				symbol: 'gr',
@@ -133,8 +133,8 @@ const imperialUnits = {
 			}
 		]
 	},
-	lengths: {
-		convert: sum => simpleConvert(sum, inch, metricUnits.lengths, ['km', 'm', 'cm', 'mm']),
+	length: {
+		convert: sum => simpleConvert(sum, inch, metricUnits.length, ['km', 'm', 'cm', 'mm']),
 		units: [
 			{
 				symbol: 'in',
@@ -231,8 +231,8 @@ const metricUnits = {
 			}
 		]
 	},
-	weight: {
-		convert: sum => simpleConvert(sum, 1 / pound, imperialUnits.weight, ['oz', 'lbs', 't']),
+	mass: {
+		convert: sum => simpleConvert(sum, 1 / pound, imperialUnits.mass, ['oz', 'lbs', 't']),
 		units: [
 			{
 				symbol: 'mg',
@@ -280,11 +280,11 @@ const metricUnits = {
 			}
 		]
 	},
-	lengths: {
+	length: {
 		convert: sum => {
 			const inches = sum / inch;
-			const displayedUnits = imperialUnits.lengths.units.filter(unit =>
-				['ml', 'ft', 'in'].includes(unit.symbol)
+			const displayedUnits = imperialUnits.length.units.filter(unit =>
+				['mi', 'ft', 'in'].includes(unit.symbol)
 			);
 
 			// A special case to use the feet'inches" format when the number is
