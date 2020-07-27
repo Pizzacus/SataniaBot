@@ -108,7 +108,7 @@ const imperialUnits = {
 			},
 			{
 				symbol: 'lb',
-				names: ['pound', 'pounds'],
+				names: ['pound', 'pounds', 'lbs'],
 				multiplier: 1
 			},
 			{
