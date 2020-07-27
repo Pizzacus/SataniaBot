@@ -165,6 +165,21 @@ const imperialUnits = {
 				symbol: 'mi',
 				names: ['mile', 'miles'],
 				multiplier: 12 * 3 * 22 * 10 * 8
+			},
+			{
+				symbol: 'ftm',
+				names: ['fathom', 'fathoms'],
+				multiplier: 12 * 3 * 2.02667
+			},
+			{
+				symbol: 'cable',
+				names: ['cables'],
+				multiplier: 12 * 3 * 2.02667 * 100
+			},
+			{
+				symbol: 'nmi',
+				names: ['nautical mile', 'nautical miles'],
+				multiplier: 12 * 3 * 2.02667 * 100 * 10
 			}
 		]
 	}
