@@ -10,11 +10,11 @@ const spanishBirthday = /feliz\s*cumpleaños/;
 
 const languages = {
 	english: [
-		reg`${happyBirthday}\s*${sataniaName}`,
+		reg`${happyBirthday},?\s*${sataniaName}`,
 		reg`${sataniaName},?\s*${happyBirthday}`
 	],
 	japanese: [
-		reg`${sataniaName}${tanjoubiOmedetou}${/よ?ね?/}`,
+		reg`${sataniaName}、?${tanjoubiOmedetou}${/よ?ね?/}`,
 		reg`${tanjoubiOmedetou}$、?${sataniaName}`
 	],
 	spanish: [
@@ -22,7 +22,7 @@ const languages = {
 		reg`${sataniaName},?${spanishBirthday}`
 	],
 	french: [
-		reg`${frenchBirthday}\s*${sataniaName}`,
+		reg`${frenchBirthday},?\s*${sataniaName}`,
 		reg`${sataniaName},?\s*${frenchBirthday}`
 	]
 };
