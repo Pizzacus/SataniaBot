@@ -43,7 +43,7 @@ module.exports = new Proxy(function (strings, ...keys) {
 	return processTemplate;
 }, {
 	get: (obj, key) => {
-		if (typeof key === 'string' && /[gimuy]+/.test(key)) {
+		if (typeof key === 'string' && /^[gimuys]+$/.test(key)) {
 			return obj(key);
 		}
 
