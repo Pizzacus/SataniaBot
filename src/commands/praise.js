@@ -22,7 +22,7 @@ const languages = {
 
 const allSentences = Object.values(languages).reduce((collected, current) => [...collected, ...current], []);
 const options = {
-	trigger: reg.i`^(${allSentences}${extra}${extra}${extra})$` // Allow combinations by repeating them.
+	trigger: reg.i`^(${extra}${allSentences}${extra})$`
 };
 
 async function exec(message) {

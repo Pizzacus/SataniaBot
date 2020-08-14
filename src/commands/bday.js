@@ -29,7 +29,7 @@ const languages = {
 
 const allSentences = Object.values(languages).reduce((collected, current) => [...collected, ...current], []);
 const options = {
-	trigger: reg.i`^(${allSentences}${extra}${extra}${extra})$`
+	trigger: reg.i`^(${extra}${allSentences}${extra})$`
 };
 
 async function exec(message) {
