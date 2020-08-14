@@ -10,7 +10,7 @@ const languages = {
 		reg`${sataniaName}\s*(the\s*)?best\s*((girl|debiru|devil|demon|(dai)?akuma)\s*)?`
 	],
 	japanese: [
-		reg`${sataniaName}${/(((のこと|の事)?(は|が)?((だい)?すき|大?好き|世界一|一番|かわいい|可愛い|最高)(です)?)|を?褒めて(ください)?)?/}${/よ?ね?/}`
+		reg`${sataniaName}${/(((のこと|の事)?(は|が)?((だい)?すき|大?好き|世界一|一番|かわいい|可愛い|最高)(だ|です)?)|を?褒めて(ください)?)?/}${/よ?ね?/}`
 	],
 	russian: [
 		reg`Слава\s*${sataniaName}`
