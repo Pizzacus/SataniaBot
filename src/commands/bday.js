@@ -16,7 +16,7 @@ const languages = {
 	],
 	japanese: [
 		reg`${sataniaName}、?${tanjoubiOmedetou}${/よ?ね?/}`,
-		reg`${tanjoubiOmedetou}$、?${sataniaName}`
+		reg`${tanjoubiOmedetou}、?${sataniaName}`
 	],
 	spanish: [
 		reg`${spanishBirthday},?${sataniaName}`,
