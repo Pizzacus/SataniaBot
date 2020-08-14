@@ -3,26 +3,17 @@ const {Command} = require('discord-akairo');
 const reg = require('../utils/reg');
 const {sataniaName, extra} = require('../utils/regex-constants');
 
-const languages = {
-	english: [
-		reg`(praise|just|love|(all )?h(a|e)il)?\s*${sataniaName}`,
-		reg`${sataniaName}\s*(praise|love|(all )?h(a|e)il)?\s*`,
-		reg`${sataniaName}\s*(the\s*)?best\s*((girl|debiru|devil|demon|(dai)?akuma)\s*)?`
-	],
-	japanese: [
-		reg`${sataniaName}${/(((のこと|の事)?(は|が)?((だい)?すき|大?好き|世界一|一番|かわいい|可愛い|最高)(だ|です)?)|を?褒めて(ください)?)?/}${/よ?ね?/}`
-	],
-	russian: [
-		reg`Слава\s*${sataniaName}`
-	],
-	shared: [
-		reg`(Sauda(ç|c)(õ|o)es\s*a|a(ç|c)ai|salve|gloire?\s*(à|a)|(alaben|rezen|diosa)\s*a?)\s*${sataniaName}` // Portuguese, Spanish, and Italian
-	]
-};
+const sentences = [
+	reg`(praise|just|love|(all )?h(a|e)il)?\s*${sataniaName}`, // English
+	reg`${sataniaName}\s*(praise|love|(all )?h(a|e)il)?\s*`,
+	reg`${sataniaName}\s*(the\s*)?best\s*((girl|debiru|devil|demon|(dai)?akuma)\s*)?`,
+	reg`${sataniaName}${/(((のこと|の事)?(は|が)?((だい)?すき|大?好き|世界一|一番|かわいい|可愛い|最高)(だ|です)?)|を?褒めて(ください)?)?/}${/よ?ね?/}`, // Japanese
+	reg`Слава\s*${sataniaName}`, // Russian
+	reg`(Sauda(ç|c)(õ|o)es\s*a|a(ç|c)ai|salve|gloire?\s*(à|a)|(alaben|rezen|diosa)\s*a?)\s*${sataniaName}` // Portuguese, Spanish, and Italian
+];
 
-const allSentences = Object.values(languages).reduce((collected, current) => [...collected, ...current], []);
 const options = {
-	trigger: reg.i`^(${extra}${allSentences}${extra})$`
+	trigger: reg.i`^(${extra}${sentences}${extra})$`
 };
 
 async function exec(message) {

@@ -9,32 +9,21 @@ const frenchBirthday = /(joyeu(x|se)?|bon(ne)?)\s*(ann?iv(erss?aire?)?|f[êe]te)
 const spanishBirthday = /feliz\s*(cumplea[ñn]os|cumple)/;
 const portugueseBirthday = /(feliz\s*anivers[áa]rio)|Parab[ée]ns/;
 
-const languages = {
-	english: [
-		reg`${happyBirthday},?\s*${sataniaName}`,
-		reg`${sataniaName},?\s*${happyBirthday}`
-	],
-	japanese: [
-		reg`${sataniaName}、?${tanjoubiOmedetou}${/よ?ね?/}`,
-		reg`${tanjoubiOmedetou}、?${sataniaName}`
-	],
-	spanish: [
-		reg`${spanishBirthday},?${sataniaName}`,
-		reg`${sataniaName},?${spanishBirthday}`
-	],
-	french: [
-		reg`${frenchBirthday},?\s*${sataniaName}`,
-		reg`${sataniaName},?\s*${frenchBirthday}`
-	],
-	portuguese: [
-		reg`${portugueseBirthday},?\s*${sataniaName}`,
-		reg`${sataniaName},?\s*${portugueseBirthday}`
-	]
-};
+const sentences = [
+	reg`${happyBirthday},?\s*${sataniaName}`, // English
+	reg`${sataniaName},?\s*${happyBirthday}`,
+	reg`${sataniaName}、?${tanjoubiOmedetou}${/よ?ね?/}`, // Japanese
+	reg`${tanjoubiOmedetou}、?${sataniaName}`,
+	reg`${spanishBirthday},?${sataniaName}`, // Spanish
+	reg`${sataniaName},?${spanishBirthday}`,
+	reg`${frenchBirthday},?\s*${sataniaName}`, // French
+	reg`${sataniaName},?\s*${frenchBirthday}`,
+	reg`${portugueseBirthday},?\s*${sataniaName}`, // Portuguese
+	reg`${sataniaName},?\s*${portugueseBirthday}`
+];
 
-const allSentences = Object.values(languages).reduce((collected, current) => [...collected, ...current], []);
 const options = {
-	trigger: reg.i`^(${extra}${allSentences}${extra})$`
+	trigger: reg.i`^(${extra}${sentences}${extra})$`
 };
 
 async function exec(message) {
