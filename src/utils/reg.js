@@ -1,6 +1,6 @@
 
 function isIterator(val) {
-	return val && typeof val[Symbol.iterator] === 'function';
+	return val != null && typeof val[Symbol.iterator] === 'function';
 }
 
 module.exports = new Proxy(function (strings, ...keys) {
