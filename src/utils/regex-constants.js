@@ -8,10 +8,10 @@ const extra = /[!！¡﹗︕‼¿？⁉﹖︖⁈⁇?~˜～〜]?/;
 const sataniaName = reg`${kurumizawa}${satania}${mcdowell}${honorifics}`;
 
 module.exports = {
-	kurumizawa: kurumizawa,
-	satania: satania,
-	mcdowell: mcdowell,
-	honorifics: honorifics,
-	extra: extra,
-	sataniaName: sataniaName
+	kurumizawa,
+	satania,
+	mcdowell,
+	honorifics,
+	extra,
+	sataniaName
 };
