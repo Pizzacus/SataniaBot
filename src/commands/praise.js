@@ -4,8 +4,8 @@ const reg = require('../utils/reg');
 const {sataniaName, extra} = require('../utils/regex-constants');
 
 const sentences = [
-	reg`(praise|just|love|(all )?h(a|e)il)?\s*${sataniaName}`, // English
-	reg`${sataniaName}\s*(praise|love|(all )?h(a|e)il)?\s*`,
+	reg`(praise|just|love|(all\s*)?h(a|e)il)?\s*${sataniaName}`, // English
+	reg`${sataniaName}\s*(praise|love|(all\s*)?h(a|e)il)?\s*`,
 	reg`${sataniaName}\s*(the\s*)?best\s*((girl|debiru|devil|demon|(dai)?akuma)\s*)?`,
 	reg`${sataniaName}${/(((のこと|の事)?(は|が)?((だい)?すき|大?好き|世界一|一番|かわいい|可愛い|最高)(だ|です)?)|を?褒めて(ください)?)?/}${/よ?ね?/}`, // Japanese
 	reg`Слава\s*${sataniaName}`, // Russian

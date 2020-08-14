@@ -3,7 +3,7 @@ const {Command} = require('discord-akairo');
 const reg = require('../utils/reg');
 const {sataniaName, extra} = require('../utils/regex-constants');
 
-const happyBirthday = /happy (birthday|bday|day of the birth)/;
+const happyBirthday = /happy\s*(birthday|bday|day\s*of\s*(the)?\s*birth)/;
 const tanjoubiOmedetou = /(お?(たんじょうび|誕生日)おめでとう(ございます|です)?)/;
 const frenchBirthday = /(joyeu(x|se)?|bon(ne)?)\s*(ann?iv(erss?aire?)?|f[êe]te)s?/;
 const spanishBirthday = /feliz\s*(cumplea[ñn]os|cumple)/;
